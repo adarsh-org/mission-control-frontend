@@ -111,10 +111,10 @@ export function useMessages() {
 }
 
 export function useSSE(
-  onAgent?: (agent: Agent) => void,
-  onTask?: (task: Task) => void,
+  onAgent?: (agent: Agent, action?: 'created' | 'updated') => void,
+  onTask?: (task: Task | { id: number }, action?: 'created' | 'updated' | 'deleted') => void,
   onMessage?: (message: Message) => void,
-  onKanban?: (data: Partial<KanbanData>) => void
+  onInit?: (data: { tasks: Task[]; agents: Agent[] }) => void
 ) {
   const [connected, setConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -126,17 +126,71 @@ export function useSSE(
     eventSource.onopen = () => setConnected(true);
     eventSource.onerror = () => setConnected(false);
 
+    // Handle init event with full state
+    eventSource.addEventListener('init', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onInit?.(data);
+      } catch {}
+    });
+
+    // Agent events
+    eventSource.addEventListener('agent-created', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onAgent?.(data, 'created');
+      } catch {}
+    });
+
+    eventSource.addEventListener('agent-updated', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onAgent?.(data, 'updated');
+      } catch {}
+    });
+
+    // Task events
+    eventSource.addEventListener('task-created', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onTask?.(data, 'created');
+      } catch {}
+    });
+
+    eventSource.addEventListener('task-updated', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onTask?.(data, 'updated');
+      } catch {}
+    });
+
+    eventSource.addEventListener('task-deleted', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onTask?.(data, 'deleted');
+      } catch {}
+    });
+
+    // Message events
+    eventSource.addEventListener('message-created', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        onMessage?.(data);
+      } catch {}
+    });
+
+    // Legacy event names for backward compatibility
     eventSource.addEventListener('agent', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onAgent?.(data);
+        onAgent?.(data, 'updated');
       } catch {}
     });
 
     eventSource.addEventListener('task', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onTask?.(data);
+        onTask?.(data, 'updated');
       } catch {}
     });
 
@@ -147,31 +201,11 @@ export function useSSE(
       } catch {}
     });
 
-    eventSource.addEventListener('kanban', (e: MessageEvent) => {
-      try {
-        const data = JSON.parse(e.data);
-        onKanban?.(data);
-      } catch {}
-    });
-
-    // Legacy log event - convert to message
-    eventSource.addEventListener('log', (e: MessageEvent) => {
-      const msg: Message = {
-        id: Math.random().toString(36).substr(2, 9),
-        agentId: 'system',
-        agentName: 'System',
-        content: e.data,
-        timestamp: new Date().toISOString(),
-        type: 'info',
-      };
-      onMessage?.(msg);
-    });
-
     return () => {
       eventSource.close();
       eventSourceRef.current = null;
     };
-  }, [onAgent, onTask, onMessage, onKanban]);
+  }, [onAgent, onTask, onMessage, onInit]);
 
   return { connected };
 }

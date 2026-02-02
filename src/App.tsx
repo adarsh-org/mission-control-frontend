@@ -41,7 +41,7 @@ export default function App() {
   const { messages, loading: messagesLoading, addMessage } = useMessages();
 
   // SSE handlers
-  const handleAgentUpdate = useCallback((agent: Agent) => {
+  const handleAgentUpdate = useCallback((agent: Agent, _action?: 'created' | 'updated') => {
     setAgents(prev => {
       const idx = prev.findIndex(a => a.id === agent.id);
       if (idx >= 0) {
@@ -49,19 +49,27 @@ export default function App() {
         next[idx] = { ...next[idx], ...agent };
         return next;
       }
+      // New agent - add to list
       return [...prev, agent];
     });
   }, [setAgents]);
 
-  const handleTaskUpdate = useCallback((task: Task) => {
+  const handleTaskUpdate = useCallback((task: Task | { id: number }, action?: 'created' | 'updated' | 'deleted') => {
+    if (action === 'deleted') {
+      setTasks(prev => prev.filter(t => t.id !== task.id));
+      return;
+    }
+    
     setTasks(prev => {
-      const idx = prev.findIndex(t => t.id === task.id);
+      const fullTask = task as Task;
+      const idx = prev.findIndex(t => t.id === fullTask.id);
       if (idx >= 0) {
         const next = [...prev];
-        next[idx] = { ...next[idx], ...task };
+        next[idx] = { ...next[idx], ...fullTask };
         return next;
       }
-      return [...prev, task];
+      // New task - add to list
+      return [...prev, fullTask];
     });
   }, [setTasks]);
 
@@ -69,10 +77,16 @@ export default function App() {
     addMessage(message);
   }, [addMessage]);
 
+  const handleInit = useCallback((data: { tasks: Task[]; agents: Agent[] }) => {
+    if (data.agents) setAgents(data.agents);
+    if (data.tasks) setTasks(data.tasks);
+  }, [setAgents, setTasks]);
+
   const { connected } = useSSE(
     handleAgentUpdate,
     handleTaskUpdate,
-    handleMessageUpdate
+    handleMessageUpdate,
+    handleInit
   );
 
   const handleMoveTask = useCallback((taskId: string, newStatus: TaskStatus) => {
