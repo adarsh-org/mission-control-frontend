@@ -4,7 +4,7 @@ import type { Agent, Task, Message, KanbanData, TaskStatus } from '../types';
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 // Transform helpers
-function transformTask(apiTask: Record<string, unknown>): Task {
+export function transformTask(apiTask: Record<string, unknown>): Task {
   return {
     id: String(apiTask.id),
     title: String(apiTask.title || ''),
@@ -16,7 +16,7 @@ function transformTask(apiTask: Record<string, unknown>): Task {
   };
 }
 
-function transformAgent(apiAgent: Record<string, unknown>): Agent {
+export function transformAgent(apiAgent: Record<string, unknown>): Agent {
   return {
     id: String(apiAgent.id),
     name: String(apiAgent.name || ''),
@@ -26,13 +26,17 @@ function transformAgent(apiAgent: Record<string, unknown>): Agent {
   };
 }
 
-function transformMessage(apiMsg: Record<string, unknown>): Message {
+export function transformMessage(apiMsg: Record<string, unknown>): Message {
+  const ts = String(apiMsg.created_at ?? apiMsg.timestamp ?? new Date().toISOString());
+  if (isNaN(new Date(ts).getTime())) {
+     console.error("Invalid timestamp detected in transformMessage:", apiMsg, ts);
+  }
   return {
     id: String(apiMsg.id ?? apiMsg.Id ?? ''),
     agentId: String(apiMsg.agent_id ?? apiMsg.agentId ?? ''),
     agentName: String(apiMsg.agent_name ?? apiMsg.agentName ?? 'Unknown'),
     content: String(apiMsg.message ?? apiMsg.content ?? ''),
-    timestamp: String(apiMsg.created_at ?? apiMsg.timestamp ?? new Date().toISOString()),
+    timestamp: ts,
     type: (apiMsg.type as Message['type']) ?? 'info',
   };
 }

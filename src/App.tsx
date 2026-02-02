@@ -3,7 +3,7 @@ import { Radio, Wifi, WifiOff } from 'lucide-react';
 import { AgentsList } from './components/AgentsList';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AgentChat } from './components/AgentChat';
-import { useAgents, useTasks, useMessages, useSSE } from './hooks/useApi';
+import { useAgents, useTasks, useMessages, useSSE, transformAgent, transformTask } from './hooks/useApi';
 import type { Agent, Task, Message, TaskStatus } from './types';
 
 function Header({ connected }: { connected: boolean }) {
@@ -77,9 +77,9 @@ export default function App() {
     addMessage(message);
   }, [addMessage]);
 
-  const handleInit = useCallback((data: { tasks: Task[]; agents: Agent[] }) => {
-    if (data.agents) setAgents(data.agents);
-    if (data.tasks) setTasks(data.tasks);
+  const handleInit = useCallback((data: { tasks: any[]; agents: any[] }) => {
+    if (data.agents) setAgents(data.agents.map(transformAgent));
+    if (data.tasks) setTasks(data.tasks.map(transformTask));
   }, [setAgents, setTasks]);
 
   const { connected } = useSSE(
