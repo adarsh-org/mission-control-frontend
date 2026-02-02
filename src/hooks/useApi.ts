@@ -95,6 +95,7 @@ export function useTasks() {
   const kanban: KanbanData = {
     backlog: tasks.filter(t => t.status === 'backlog'),
     todo: tasks.filter(t => t.status === 'todo'),
+    in_progress: tasks.filter(t => t.status === 'in_progress'),
     review: tasks.filter(t => t.status === 'review'),
     completed: tasks.filter(t => t.status === 'completed'),
   };

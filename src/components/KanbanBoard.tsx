@@ -17,7 +17,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Bot } from 'lucide-react';
+import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Bot, Play } from 'lucide-react';
 import type { Task, KanbanData, TaskStatus, Agent } from '../types';
 
 // Helper to format relative time
@@ -44,6 +44,7 @@ function getRelativeTime(dateString?: string): string {
 const statusColors: Record<TaskStatus, { border: string; glow: string }> = {
   backlog: { border: 'border-l-cyber-purple', glow: 'shadow-cyber-purple/20' },
   todo: { border: 'border-l-cyber-red', glow: 'shadow-cyber-red/20' },
+  in_progress: { border: 'border-l-cyber-orange', glow: 'shadow-cyber-orange/20' },
   review: { border: 'border-l-cyber-yellow', glow: 'shadow-cyber-yellow/20' },
   completed: { border: 'border-l-cyber-green', glow: 'shadow-cyber-green/20' },
 };
@@ -58,6 +59,7 @@ interface KanbanBoardProps {
 const columnConfig: Record<TaskStatus, { title: string; icon: typeof Inbox; color: string }> = {
   backlog: { title: 'Backlog', icon: Inbox, color: 'cyber-purple' },
   todo: { title: 'Todo', icon: ListTodo, color: 'cyber-red' },
+  in_progress: { title: 'In Progress', icon: Play, color: 'cyber-orange' },
   review: { title: 'Review', icon: Eye, color: 'cyber-yellow' },
   completed: { title: 'Completed', icon: CheckCircle2, color: 'cyber-green' },
 };
@@ -228,8 +230,8 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
     })
   );
 
-  const columns: TaskStatus[] = ['backlog', 'todo', 'review', 'completed'];
-  const allTasks = [...kanban.backlog, ...kanban.todo, ...kanban.review, ...kanban.completed];
+  const columns: TaskStatus[] = ['backlog', 'todo', 'in_progress', 'review', 'completed'];
+  const allTasks = [...kanban.backlog, ...kanban.todo, ...kanban.in_progress, ...kanban.review, ...kanban.completed];
 
   const handleDragStart = (event: DragStartEvent) => {
     const task = allTasks.find(t => t.id === event.active.id);
@@ -267,8 +269,8 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
   if (loading) {
     return (
       <div className="h-full p-4">
-        <div className="grid grid-cols-4 gap-4 h-full">
-          {[1, 2, 3, 4].map(i => (
+        <div className="grid grid-cols-5 gap-4 h-full">
+          {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className="bg-black/30 rounded-xl animate-pulse" />
           ))}
         </div>
@@ -284,7 +286,7 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid grid-cols-4 gap-4 h-full">
+        <div className="grid grid-cols-5 gap-4 h-full">
           {columns.map(status => (
             <KanbanColumn
               key={status}

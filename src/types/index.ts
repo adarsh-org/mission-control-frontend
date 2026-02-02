@@ -1,4 +1,4 @@
-export type TaskStatus = 'backlog' | 'todo' | 'review' | 'completed';
+export type TaskStatus = 'backlog' | 'todo' | 'in_progress' | 'review' | 'completed';
 
 export interface Task {
   id: string;
@@ -32,6 +32,7 @@ export interface Message {
 export interface KanbanData {
   backlog: Task[];
   todo: Task[];
+  in_progress: Task[];
   review: Task[];
   completed: Task[];
 }
