@@ -54,7 +54,7 @@ export default function App() {
     });
   }, [setAgents]);
 
-  const handleTaskUpdate = useCallback((task: Task | { id: number }, action?: 'created' | 'updated' | 'deleted') => {
+  const handleTaskUpdate = useCallback((task: Task | { id: string }, action?: 'created' | 'updated' | 'deleted') => {
     if (action === 'deleted') {
       setTasks(prev => prev.filter(t => t.id !== task.id));
       return;

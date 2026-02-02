@@ -151,7 +151,7 @@ export function useMessages() {
 
 export function useSSE(
   onAgent?: (agent: Agent, action?: 'created' | 'updated') => void,
-  onTask?: (task: Task | { id: number }, action?: 'created' | 'updated' | 'deleted') => void,
+  onTask?: (task: Task | { id: string }, action?: 'created' | 'updated' | 'deleted') => void,
   onMessage?: (message: Message) => void,
   onInit?: (data: { tasks: Task[]; agents: Agent[] }) => void
 ) {
@@ -209,8 +209,8 @@ export function useSSE(
     eventSource.addEventListener('task-deleted', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        // Deleted event usually just sends ID, but if it sends object we map it
-        onTask?.(data.id ? { id: String(data.id) } : transformTask(data), 'deleted');
+        // Deleted event sends ID as string for type compatibility
+        onTask?.({ id: String(data.id) }, 'deleted');
       } catch {}
     });
 
