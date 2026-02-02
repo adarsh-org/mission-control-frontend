@@ -69,6 +69,13 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, agents, isDragging }: TaskCardProps) {
+  console.log('TaskCard render:', { 
+    taskId: task.id, 
+    agentId: task.agentId, 
+    agentIdType: typeof task.agentId, 
+    foundAgent: agents.find(a => a.id === task.agentId),
+    agentsList: agents
+  });
   const agent = agents.find(a => a.id === task.agentId);
   const statusStyle = statusColors[task.status];
   const relativeTime = getRelativeTime(task.updatedAt || task.createdAt);
@@ -209,6 +216,7 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
 }
 
 export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoardProps) {
+  console.log('KanbanBoard render:', { kanbanKeys: Object.keys(kanban), agentsCount: agents.length, agents });
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(

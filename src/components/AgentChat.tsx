@@ -28,6 +28,7 @@ const typeColors: Record<string, string> = {
 };
 
 function ChatMessage({ message }: { message: Message }) {
+  console.log('ChatMessage render:', { message, timestampType: typeof message.timestamp, timestampVal: message.timestamp });
   const typeColor = typeColors[message.type || 'info'] || typeColors.info;
   
   return (
@@ -49,6 +50,7 @@ function ChatMessage({ message }: { message: Message }) {
 }
 
 export function AgentChat({ messages, loading }: AgentChatProps) {
+  console.log('AgentChat render:', { messagesCount: messages.length, messages, loading });
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
