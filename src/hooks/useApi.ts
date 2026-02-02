@@ -3,6 +3,40 @@ import type { Agent, Task, Message, KanbanData, TaskStatus } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
+// Transform helpers
+function transformTask(apiTask: Record<string, unknown>): Task {
+  return {
+    id: String(apiTask.id),
+    title: String(apiTask.title || ''),
+    description: String(apiTask.description || ''),
+    status: (apiTask.status as TaskStatus) || 'backlog',
+    agentId: apiTask.agent_id ? String(apiTask.agent_id) : undefined,
+    createdAt: String(apiTask.created_at || new Date().toISOString()),
+    updatedAt: String(apiTask.updated_at || new Date().toISOString()),
+  };
+}
+
+function transformAgent(apiAgent: Record<string, unknown>): Agent {
+  return {
+    id: String(apiAgent.id),
+    name: String(apiAgent.name || ''),
+    description: String(apiAgent.description || ''),
+    status: (apiAgent.status as Agent['status']) || 'idle',
+    avatar: apiAgent.avatar ? String(apiAgent.avatar) : undefined,
+  };
+}
+
+function transformMessage(apiMsg: Record<string, unknown>): Message {
+  return {
+    id: String(apiMsg.id ?? apiMsg.Id ?? ''),
+    agentId: String(apiMsg.agent_id ?? apiMsg.agentId ?? ''),
+    agentName: String(apiMsg.agent_name ?? apiMsg.agentName ?? 'Unknown'),
+    content: String(apiMsg.message ?? apiMsg.content ?? ''),
+    timestamp: String(apiMsg.created_at ?? apiMsg.timestamp ?? new Date().toISOString()),
+    type: (apiMsg.type as Message['type']) ?? 'info',
+  };
+}
+
 export function useAgents() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +47,8 @@ export function useAgents() {
       const res = await fetch(`${API_BASE}/api/agents`);
       if (!res.ok) throw new Error('Failed to fetch agents');
       const data = await res.json();
-      setAgents(Array.isArray(data) ? data : data.agents || []);
+      const rawAgents = Array.isArray(data) ? data : data.agents || [];
+      setAgents(rawAgents.map(transformAgent));
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -39,7 +74,8 @@ export function useTasks() {
       const res = await fetch(`${API_BASE}/api/tasks`);
       if (!res.ok) throw new Error('Failed to fetch tasks');
       const data = await res.json();
-      setTasks(Array.isArray(data) ? data : data.tasks || []);
+      const rawTasks = Array.isArray(data) ? data : data.tasks || [];
+      setTasks(rawTasks.map(transformTask));
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -60,7 +96,6 @@ export function useTasks() {
   };
 
   const moveTask = useCallback(async (taskId: string, newStatus: TaskStatus) => {
-    // Optimistic update
     setTasks(prev => prev.map(t => 
       t.id === taskId ? { ...t, status: newStatus } : t
     ));
@@ -72,7 +107,6 @@ export function useTasks() {
         body: JSON.stringify({ status: newStatus }),
       });
     } catch (err) {
-      // Revert on error
       fetchTasks();
     }
   }, [fetchTasks]);
@@ -90,7 +124,8 @@ export function useMessages() {
       const res = await fetch(`${API_BASE}/api/messages`);
       if (!res.ok) throw new Error('Failed to fetch messages');
       const data = await res.json();
-      setMessages(Array.isArray(data) ? data : data.messages || []);
+      const rawMessages = Array.isArray(data) ? data : data.messages || [];
+      setMessages(rawMessages.map(transformMessage));
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -130,6 +165,9 @@ export function useSSE(
     eventSource.addEventListener('init', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
+        // Transform init data if needed
+        // Assuming backend sends raw DB format, we might need to transform here too if onInit uses it directly
+        // But onInit isn't widely used in current App.tsx logic (hooks handle fetching).
         onInit?.(data);
       } catch {}
     });
@@ -138,14 +176,14 @@ export function useSSE(
     eventSource.addEventListener('agent-created', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onAgent?.(data, 'created');
+        onAgent?.(transformAgent(data), 'created');
       } catch {}
     });
 
     eventSource.addEventListener('agent-updated', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onAgent?.(data, 'updated');
+        onAgent?.(transformAgent(data), 'updated');
       } catch {}
     });
 
@@ -153,21 +191,22 @@ export function useSSE(
     eventSource.addEventListener('task-created', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onTask?.(data, 'created');
+        onTask?.(transformTask(data), 'created');
       } catch {}
     });
 
     eventSource.addEventListener('task-updated', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onTask?.(data, 'updated');
+        onTask?.(transformTask(data), 'updated');
       } catch {}
     });
 
     eventSource.addEventListener('task-deleted', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onTask?.(data, 'deleted');
+        // Deleted event usually just sends ID, but if it sends object we map it
+        onTask?.(data.id ? { id: String(data.id) } : transformTask(data), 'deleted');
       } catch {}
     });
 
@@ -175,29 +214,29 @@ export function useSSE(
     eventSource.addEventListener('message-created', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onMessage?.(data);
+        onMessage?.(transformMessage(data));
       } catch {}
     });
 
-    // Legacy event names for backward compatibility
+    // Legacy event names
     eventSource.addEventListener('agent', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onAgent?.(data, 'updated');
+        onAgent?.(transformAgent(data), 'updated');
       } catch {}
     });
 
     eventSource.addEventListener('task', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onTask?.(data, 'updated');
+        onTask?.(transformTask(data), 'updated');
       } catch {}
     });
 
     eventSource.addEventListener('message', (e: MessageEvent) => {
       try {
         const data = JSON.parse(e.data);
-        onMessage?.(data);
+        onMessage?.(transformMessage(data));
       } catch {}
     });
 
