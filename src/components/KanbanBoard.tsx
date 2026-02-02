@@ -17,8 +17,36 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, User } from 'lucide-react';
+import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Bot } from 'lucide-react';
 import type { Task, KanbanData, TaskStatus, Agent } from '../types';
+
+// Helper to format relative time
+function getRelativeTime(dateString?: string): string {
+  if (!dateString) return '';
+  
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  
+  if (diffSecs < 60) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// Status color config for card accents
+const statusColors: Record<TaskStatus, { border: string; glow: string }> = {
+  backlog: { border: 'border-l-cyber-purple', glow: 'shadow-cyber-purple/20' },
+  todo: { border: 'border-l-cyber-red', glow: 'shadow-cyber-red/20' },
+  review: { border: 'border-l-cyber-yellow', glow: 'shadow-cyber-yellow/20' },
+  completed: { border: 'border-l-cyber-green', glow: 'shadow-cyber-green/20' },
+};
 
 interface KanbanBoardProps {
   kanban: KanbanData;
@@ -42,27 +70,64 @@ interface TaskCardProps {
 
 function TaskCard({ task, agents, isDragging }: TaskCardProps) {
   const agent = agents.find(a => a.id === task.agentId);
+  const statusStyle = statusColors[task.status];
+  const relativeTime = getRelativeTime(task.updatedAt || task.createdAt);
   
   return (
     <div 
-      className={`p-3 bg-cyber-dark border border-white/10 rounded-lg transition-all ${
-        isDragging ? 'shadow-neon-green opacity-80 scale-105' : 'hover:border-cyber-green/30'
-      }`}
+      className={`
+        group relative p-3 bg-cyber-dark border border-white/10 rounded-lg transition-all
+        border-l-2 ${statusStyle.border}
+        ${isDragging ? 'shadow-lg shadow-cyber-green/30 opacity-90 scale-[1.02]' : `hover:border-white/20 hover:${statusStyle.glow}`}
+      `}
     >
-      <div className="flex items-start gap-2">
-        <GripVertical className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5 cursor-grab" />
-        <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-semibold text-white truncate">{task.title}</h4>
-          {task.description && (
-            <p className="text-xs text-gray-400 mt-1 line-clamp-2">{task.description}</p>
-          )}
-          {agent && (
-            <div className="flex items-center gap-1.5 mt-2">
-              <User className="w-3 h-3 text-cyber-blue" />
-              <span className="text-[10px] text-cyber-blue">{agent.name}</span>
+      {/* Drag Handle */}
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <GripVertical className="w-4 h-4 text-gray-500 cursor-grab" />
+      </div>
+      
+      {/* Title */}
+      <h4 className="text-sm font-semibold text-white pr-6 leading-tight">{task.title}</h4>
+      
+      {/* Description */}
+      {task.description && (
+        <p className="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">
+          {task.description}
+        </p>
+      )}
+      
+      {/* Footer: Agent + Timestamp */}
+      <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
+        {/* Agent Badge */}
+        {agent ? (
+          <div className="flex items-center gap-1.5">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyber-blue/30 to-cyber-purple/30 border border-cyber-blue/30 flex items-center justify-center">
+              {agent.avatar ? (
+                <img src={agent.avatar} alt="" className="w-full h-full rounded-full object-cover" />
+              ) : (
+                <Bot className="w-3 h-3 text-cyber-blue" />
+              )}
             </div>
-          )}
-        </div>
+            <span className="text-[10px] font-medium text-cyber-blue/80 truncate max-w-[80px]">
+              {agent.name}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 opacity-50">
+            <div className="w-5 h-5 rounded-full bg-gray-700/50 border border-gray-600/30 flex items-center justify-center">
+              <Bot className="w-3 h-3 text-gray-500" />
+            </div>
+            <span className="text-[10px] text-gray-500">Unassigned</span>
+          </div>
+        )}
+        
+        {/* Timestamp */}
+        {relativeTime && (
+          <div className="flex items-center gap-1 text-gray-500">
+            <Clock className="w-3 h-3" />
+            <span className="text-[10px] font-mono">{relativeTime}</span>
+          </div>
+        )}
       </div>
     </div>
   );
