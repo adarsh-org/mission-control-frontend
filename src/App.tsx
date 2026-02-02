@@ -1,6 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { Terminal, Activity, Server, Database, Shield, Radio, Cpu, Clock, Zap, AlertCircle, CheckCircle, Hash } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Radio, Zap, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface Task {
   id: string;
