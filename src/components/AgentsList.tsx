@@ -38,9 +38,9 @@ function StatusIndicator({ status }: { status: AgentStatus }) {
 
 function AgentCard({ agent }: { agent: Agent }) {
   return (
-    <div className="p-3 bg-cyber-dark/50 border border-cyber-green/20 rounded-lg hover:border-cyber-green/40 transition-colors group">
+    <div className="p-3 sm:p-3 bg-cyber-dark/50 border border-cyber-green/20 rounded-lg hover:border-cyber-green/40 active:border-cyber-green/50 transition-colors group touch-manipulation">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-lg bg-cyber-green/10 border border-cyber-green/30 flex items-center justify-center flex-shrink-0 group-hover:border-cyber-green/50 transition-colors">
+        <div className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-cyber-green/10 border border-cyber-green/30 flex items-center justify-center flex-shrink-0 group-hover:border-cyber-green/50 transition-colors">
           {agent.avatar ? (
             <img src={agent.avatar} alt={agent.name} className="w-full h-full rounded-lg object-cover" />
           ) : (
@@ -49,7 +49,7 @@ function AgentCard({ agent }: { agent: Agent }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-bold text-white text-sm truncate">{agent.name}</h3>
+            <h3 className="font-bold text-white text-sm sm:text-sm truncate">{agent.name}</h3>
           </div>
           {agent.description && (
             <p className="text-xs text-gray-400 mt-1 line-clamp-2">{agent.description}</p>
@@ -91,15 +91,18 @@ export function AgentsList({ agents, loading }: AgentsListProps) {
           <span className="ml-auto text-[10px] font-mono text-cyber-green/50">{agents.length}</span>
         </h2>
       </div>
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      {/* Mobile: grid layout for better use of space, Desktop: list */}
+      <div className="flex-1 overflow-y-auto p-2 sm:p-3">
         {agents.length === 0 ? (
           <div className="text-center text-gray-500 py-8 text-sm">
             No agents connected
           </div>
         ) : (
-          agents.map(agent => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
+            {agents.map(agent => (
+              <AgentCard key={agent.id} agent={agent} />
+            ))}
+          </div>
         )}
       </div>
     </div>

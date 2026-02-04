@@ -32,17 +32,17 @@ function ChatMessage({ message }: { message: Message }) {
   const typeColor = typeColors[message.type || 'info'] || typeColors.info;
   
   return (
-    <div className="px-3 py-2 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0">
-      <div className="flex items-center gap-2 mb-1">
-        <div className="w-5 h-5 rounded bg-cyber-green/20 flex items-center justify-center flex-shrink-0">
-          <Bot className="w-3 h-3 text-cyber-green" />
+    <div className="px-2.5 sm:px-3 py-2.5 sm:py-2 hover:bg-white/5 active:bg-white/10 transition-colors border-b border-white/5 last:border-0 touch-manipulation">
+      <div className="flex items-center gap-2 mb-1.5 sm:mb-1">
+        <div className="w-6 h-6 sm:w-5 sm:h-5 rounded bg-cyber-green/20 flex items-center justify-center flex-shrink-0">
+          <Bot className="w-3.5 h-3.5 sm:w-3 sm:h-3 text-cyber-green" />
         </div>
-        <span className="text-xs font-semibold text-cyber-green">{message.agentName}</span>
-        <span className="text-[10px] text-gray-500 font-mono ml-auto">
+        <span className="text-xs font-semibold text-cyber-green truncate">{message.agentName}</span>
+        <span className="text-[10px] text-gray-500 font-mono ml-auto flex-shrink-0">
           {formatTimestamp(message.timestamp)}
         </span>
       </div>
-      <p className={`text-sm pl-7 ${typeColor} break-words`}>
+      <p className={`text-sm sm:text-sm pl-8 sm:pl-7 ${typeColor} break-words leading-relaxed`}>
         {message.content}
       </p>
     </div>

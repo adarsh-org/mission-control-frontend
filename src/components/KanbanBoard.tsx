@@ -85,13 +85,13 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
   return (
     <div 
       className={`
-        group relative p-3 bg-cyber-dark border border-white/10 rounded-lg transition-all
-        border-l-2 ${statusStyle.border}
-        ${isDragging ? 'shadow-lg shadow-cyber-green/30 opacity-90 scale-[1.02]' : `hover:border-white/20 hover:${statusStyle.glow}`}
+        group relative p-2.5 sm:p-3 bg-cyber-dark border border-white/10 rounded-lg transition-all
+        border-l-2 ${statusStyle.border} touch-manipulation
+        ${isDragging ? 'shadow-lg shadow-cyber-green/30 opacity-90 scale-[1.02]' : `hover:border-white/20 hover:${statusStyle.glow} active:scale-[0.98]`}
       `}
     >
-      {/* Drag Handle */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Drag Handle - always visible on touch devices */}
+      <div className="absolute top-2 right-2 opacity-50 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
         <GripVertical className="w-4 h-4 text-gray-500 cursor-grab" />
       </div>
       
@@ -106,24 +106,24 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
       )}
       
       {/* Footer: Agent + Timestamp */}
-      <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
+      <div className="flex items-center justify-between mt-2.5 sm:mt-3 pt-2 border-t border-white/5 gap-2">
         {/* Agent Badge */}
         {agent ? (
-          <div className="flex items-center gap-1.5">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyber-blue/30 to-cyber-purple/30 border border-cyber-blue/30 flex items-center justify-center">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <div className="w-5 h-5 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-cyber-blue/30 to-cyber-purple/30 border border-cyber-blue/30 flex items-center justify-center flex-shrink-0">
               {agent.avatar ? (
                 <img src={agent.avatar} alt="" className="w-full h-full rounded-full object-cover" />
               ) : (
                 <Bot className="w-3 h-3 text-cyber-blue" />
               )}
             </div>
-            <span className="text-[10px] font-medium text-cyber-blue/80 truncate max-w-[80px]">
+            <span className="text-[10px] font-medium text-cyber-blue/80 truncate max-w-[70px] sm:max-w-[80px]">
               {agent.name}
             </span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 opacity-50">
-            <div className="w-5 h-5 rounded-full bg-gray-700/50 border border-gray-600/30 flex items-center justify-center">
+          <div className="flex items-center gap-1.5 opacity-50 min-w-0">
+            <div className="w-5 h-5 rounded-full bg-gray-700/50 border border-gray-600/30 flex items-center justify-center flex-shrink-0">
               <Bot className="w-3 h-3 text-gray-500" />
             </div>
             <span className="text-[10px] text-gray-500">Unassigned</span>
@@ -132,7 +132,7 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
         
         {/* Timestamp */}
         {relativeTime && (
-          <div className="flex items-center gap-1 text-gray-500">
+          <div className="flex items-center gap-1 text-gray-500 flex-shrink-0">
             <Clock className="w-3 h-3" />
             <span className="text-[10px] font-mono">{relativeTime}</span>
           </div>
@@ -188,12 +188,12 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
   return (
     <div 
       ref={setNodeRef}
-      className="flex flex-col h-full bg-black/30 border border-white/5 rounded-xl overflow-hidden"
+      className="flex flex-col h-full bg-black/30 border border-white/5 rounded-xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 snap-center flex-shrink-0 md:flex-shrink"
     >
-      <div className={`p-3 border-b border-${config.color}/20 bg-${config.color}/5`}>
+      <div className={`p-2 sm:p-3 border-b border-${config.color}/20 bg-${config.color}/5`}>
         <div className="flex items-center gap-2">
           <Icon className={`w-4 h-4 text-${config.color}`} />
-          <h3 className={`text-sm font-bold uppercase tracking-wider text-${config.color}`}>
+          <h3 className={`text-xs sm:text-sm font-bold uppercase tracking-wider text-${config.color}`}>
             {config.title}
           </h3>
           <span className={`ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded bg-${config.color}/20 text-${config.color}`}>
@@ -201,7 +201,7 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
           </span>
         </div>
       </div>
-      <div className="flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px]">
+      <div className="flex-1 p-1.5 sm:p-2 overflow-y-auto space-y-2 min-h-[200px]">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map(task => (
             <SortableTask key={task.id} task={task} agents={agents} />
@@ -268,10 +268,11 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
 
   if (loading) {
     return (
-      <div className="h-full p-4">
-        <div className="grid grid-cols-5 gap-4 h-full">
+      <div className="h-full p-2 sm:p-4">
+        {/* Mobile: horizontal scroll skeleton */}
+        <div className="flex md:grid md:grid-cols-5 gap-2 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory pb-2 md:pb-0">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="bg-black/30 rounded-xl animate-pulse" />
+            <div key={i} className="bg-black/30 rounded-xl animate-pulse min-w-[280px] sm:min-w-[300px] md:min-w-0 snap-center" />
           ))}
         </div>
       </div>
@@ -279,14 +280,15 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
   }
 
   return (
-    <div className="h-full p-4 overflow-hidden">
+    <div className="h-full p-2 sm:p-4 overflow-hidden">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid grid-cols-5 gap-4 h-full">
+        {/* Mobile: horizontal scroll, Desktop: grid */}
+        <div className="flex md:grid md:grid-cols-5 gap-2 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory md:snap-none pb-2 md:pb-0 scrollbar-thin">
           {columns.map(status => (
             <KanbanColumn
               key={status}
