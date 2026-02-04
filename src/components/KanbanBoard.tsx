@@ -319,7 +319,7 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
   if (loading) {
     return (
       <div className="h-full p-3 sm:p-4">
-        <div className="flex md:grid md:grid-cols-5 gap-3 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory pb-2 md:pb-0">
+        <div className="flex gap-3 sm:gap-4 h-full overflow-x-auto snap-x snap-mandatory pb-2 scrollbar-thin">
           {[1, 2, 3, 4, 5].map(i => (
             <ColumnSkeleton key={i} />
           ))}
