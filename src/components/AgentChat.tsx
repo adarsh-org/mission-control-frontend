@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { MessageSquare, Bot } from 'lucide-react';
+import { MessageSquare, Bot, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Message } from '../types';
 
 interface AgentChatProps {
   messages: Message[];
   loading?: boolean;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 function formatTimestamp(timestamp: string): string {
@@ -92,7 +94,7 @@ function MessageSkeleton() {
   );
 }
 
-export function AgentChat({ messages, loading }: AgentChatProps) {
+export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: AgentChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -107,6 +109,29 @@ export function AgentChat({ messages, loading }: AgentChatProps) {
       }
     }
   }, [messages]);
+
+  // Collapsed view - thin bar with icon
+  if (collapsed) {
+    return (
+      <div className="h-full flex flex-col items-center py-4 bg-claw-surface/30">
+        <button
+          onClick={onToggleCollapse}
+          className="w-10 h-10 rounded-lg bg-accent-secondary/10 border border-accent-secondary/20 flex items-center justify-center hover:bg-accent-secondary/20 transition-colors group"
+          title="Expand Agent Feed"
+        >
+          <ChevronLeft className="w-4 h-4 text-accent-secondary group-hover:text-accent-secondary/80" />
+        </button>
+        <div className="mt-4 w-10 h-10 rounded-lg bg-accent-secondary/10 border border-accent-secondary/20 flex items-center justify-center relative">
+          <MessageSquare className="w-4 h-4 text-accent-secondary" />
+          {messages.length > 0 && (
+            <span className="absolute -top-1 -right-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center bg-accent-secondary text-white">
+              {messages.length > 99 ? '99+' : messages.length}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -136,9 +161,13 @@ export function AgentChat({ messages, loading }: AgentChatProps) {
       <div className="p-4 border-b border-white/5 bg-claw-surface/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-accent-secondary/10 border border-accent-secondary/20 flex items-center justify-center">
-              <MessageSquare className="w-4 h-4 text-accent-secondary" />
-            </div>
+            <button
+              onClick={onToggleCollapse}
+              className="w-8 h-8 rounded-lg bg-accent-secondary/10 border border-accent-secondary/20 flex items-center justify-center hover:bg-accent-secondary/20 transition-colors group"
+              title="Collapse Agent Feed"
+            >
+              <ChevronRight className="w-4 h-4 text-accent-secondary group-hover:text-accent-secondary/80" />
+            </button>
             <div>
               <h2 className="text-sm font-semibold text-white">Agent Feed</h2>
               <p className="text-[10px] text-accent-muted">Live updates</p>

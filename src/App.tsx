@@ -99,6 +99,7 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
 
 export default function App() {
   const [mobileView, setMobileView] = useState<MobileView>('board');
+  const [agentFeedCollapsed, setAgentFeedCollapsed] = useState(false);
   const { agents, setAgents, loading: agentsLoading } = useAgents();
   const { kanban, loading: tasksLoading, moveTask, setTasks } = useTasks();
   const { messages, loading: messagesLoading, addMessage } = useMessages();
@@ -176,8 +177,13 @@ export default function App() {
         </section>
 
         {/* Right Panel - Agent Chat */}
-        <aside className="w-80 lg:w-96 border-l border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden">
-          <AgentChat messages={messages} loading={messagesLoading} />
+        <aside className={`${agentFeedCollapsed ? 'w-14' : 'w-80 lg:w-96'} border-l border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden transition-all duration-300`}>
+          <AgentChat 
+            messages={messages} 
+            loading={messagesLoading} 
+            collapsed={agentFeedCollapsed}
+            onToggleCollapse={() => setAgentFeedCollapsed(!agentFeedCollapsed)}
+          />
         </aside>
       </main>
 
