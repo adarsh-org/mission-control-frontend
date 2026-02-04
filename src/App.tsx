@@ -10,27 +10,38 @@ type MobileView = 'agents' | 'board' | 'chat';
 
 function Header({ connected }: { connected: boolean }) {
   return (
-    <header className="h-12 sm:h-14 px-3 sm:px-4 border-b border-cyber-green/30 bg-black/50 flex items-center justify-between backdrop-blur-sm">
-      <div className="flex items-center gap-2 sm:gap-3">
-        <Radio className="w-4 h-4 sm:w-5 sm:h-5 text-cyber-green" />
-        <h1 className="text-sm sm:text-lg font-black italic tracking-widest text-cyber-green uppercase font-display">
-          Mission Control
-        </h1>
+    <header className="h-14 sm:h-16 px-4 sm:px-6 border-b border-white/5 bg-claw-surface/80 backdrop-blur-md flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 border border-accent-primary/30 flex items-center justify-center">
+          <Radio className="w-4 h-4 text-accent-primary" />
+        </div>
+        <div>
+          <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
+            Mission Control
+          </h1>
+          <p className="text-[10px] text-accent-muted font-medium tracking-wide uppercase hidden sm:block">
+            Agent Operations Center
+          </p>
+        </div>
       </div>
-      <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-black/50 border border-cyber-green/20 rounded-full">
+      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
+        connected 
+          ? 'bg-accent-primary/10 border-accent-primary/30' 
+          : 'bg-accent-danger/10 border-accent-danger/30'
+      }`}>
         {connected ? (
           <>
-            <Wifi className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyber-green" />
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyber-green animate-pulse" />
+            <Wifi className="w-3.5 h-3.5 text-accent-primary" />
+            <div className="w-2 h-2 rounded-full bg-accent-primary status-pulse" />
           </>
         ) : (
           <>
-            <WifiOff className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyber-red" />
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyber-red" />
+            <WifiOff className="w-3.5 h-3.5 text-accent-danger" />
+            <div className="w-2 h-2 rounded-full bg-accent-danger" />
           </>
         )}
-        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-cyber-green/80">
-          {connected ? 'Online' : 'Offline'}
+        <span className={`text-xs font-medium ${connected ? 'text-accent-primary' : 'text-accent-danger'}`}>
+          {connected ? 'Live' : 'Offline'}
         </span>
       </div>
     </header>
@@ -52,7 +63,7 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-black/90 border-t border-cyber-green/30 backdrop-blur-sm z-40 flex items-center justify-around px-2 safe-area-pb">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-claw-surface/95 border-t border-white/5 backdrop-blur-lg z-40 flex items-center justify-around px-4 safe-area-pb">
       {tabs.map(tab => {
         const Icon = tab.icon;
         const isActive = activeView === tab.id;
@@ -60,23 +71,25 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
           <button
             key={tab.id}
             onClick={() => onViewChange(tab.id)}
-            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-4 rounded-lg transition-all min-w-[70px] min-h-[44px] ${
+            className={`flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl transition-all min-w-[72px] min-h-[48px] ${
               isActive 
-                ? 'text-cyber-green bg-cyber-green/10' 
-                : 'text-gray-500 hover:text-gray-300'
+                ? 'text-accent-primary bg-accent-primary/10' 
+                : 'text-accent-muted hover:text-gray-300 hover:bg-white/5'
             }`}
           >
             <div className="relative">
-              <Icon className="w-5 h-5" />
+              <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
               {tab.count !== null && tab.count > 0 && (
-                <span className={`absolute -top-1.5 -right-2 text-[8px] font-mono px-1 rounded-full ${
-                  isActive ? 'bg-cyber-green text-black' : 'bg-gray-600 text-white'
+                <span className={`absolute -top-1 -right-2.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center ${
+                  isActive ? 'bg-accent-primary text-white' : 'bg-accent-muted/50 text-white'
                 }`}>
                   {tab.count > 99 ? '99+' : tab.count}
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-medium uppercase tracking-wider">{tab.label}</span>
+            <span className={`text-[10px] font-semibold uppercase tracking-wider ${isActive ? 'text-accent-primary' : ''}`}>
+              {tab.label}
+            </span>
           </button>
         );
       })}
@@ -99,7 +112,6 @@ export default function App() {
         next[idx] = { ...next[idx], ...agent };
         return next;
       }
-      // New agent - add to list
       return [...prev, agent];
     });
   }, [setAgents]);
@@ -118,7 +130,6 @@ export default function App() {
         next[idx] = { ...next[idx], ...fullTask };
         return next;
       }
-      // New task - add to list
       return [...prev, fullTask];
     });
   }, [setTasks]);
@@ -144,18 +155,18 @@ export default function App() {
   }, [moveTask]);
 
   return (
-    <div className="h-screen flex flex-col bg-cyber-black text-white overflow-hidden crt-overlay">
+    <div className="h-screen flex flex-col bg-claw-bg text-white overflow-hidden">
       <Header connected={connected} />
       
       {/* Desktop Layout (md+) */}
       <main className="flex-1 hidden md:flex overflow-hidden">
         {/* Left Panel - Agents List */}
-        <aside className="w-56 lg:w-64 border-r border-cyber-green/20 bg-black/30 flex-shrink-0 overflow-hidden">
+        <aside className="w-64 lg:w-72 border-r border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden">
           <AgentsList agents={agents} loading={agentsLoading} />
         </aside>
 
         {/* Main Area - Kanban Board */}
-        <section className="flex-1 overflow-hidden">
+        <section className="flex-1 overflow-hidden bg-claw-bg">
           <KanbanBoard 
             kanban={kanban} 
             agents={agents}
@@ -165,19 +176,17 @@ export default function App() {
         </section>
 
         {/* Right Panel - Agent Chat */}
-        <aside className="w-72 lg:w-80 border-l border-cyber-blue/20 bg-black/30 flex-shrink-0 overflow-hidden">
+        <aside className="w-80 lg:w-96 border-l border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden">
           <AgentChat messages={messages} loading={messagesLoading} />
         </aside>
       </main>
 
       {/* Mobile Layout (below md) */}
-      <main className="flex-1 md:hidden overflow-hidden pb-14">
-        {/* Agents View */}
+      <main className="flex-1 md:hidden overflow-hidden pb-16">
         <div className={`h-full overflow-hidden ${mobileView === 'agents' ? 'block' : 'hidden'}`}>
           <AgentsList agents={agents} loading={agentsLoading} />
         </div>
 
-        {/* Kanban Board View */}
         <div className={`h-full overflow-hidden ${mobileView === 'board' ? 'block' : 'hidden'}`}>
           <KanbanBoard 
             kanban={kanban} 
@@ -187,13 +196,11 @@ export default function App() {
           />
         </div>
 
-        {/* Chat View */}
         <div className={`h-full overflow-hidden ${mobileView === 'chat' ? 'block' : 'hidden'}`}>
           <AgentChat messages={messages} loading={messagesLoading} />
         </div>
       </main>
 
-      {/* Mobile Navigation */}
       <MobileNav 
         activeView={mobileView} 
         onViewChange={setMobileView}

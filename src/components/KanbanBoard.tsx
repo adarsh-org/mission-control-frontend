@@ -41,12 +41,42 @@ function getRelativeTime(dateString?: string): string {
 }
 
 // Status color config for card accents
-const statusColors: Record<TaskStatus, { border: string; glow: string }> = {
-  backlog: { border: 'border-l-cyber-purple', glow: 'shadow-cyber-purple/20' },
-  todo: { border: 'border-l-cyber-red', glow: 'shadow-cyber-red/20' },
-  in_progress: { border: 'border-l-cyber-orange', glow: 'shadow-cyber-orange/20' },
-  review: { border: 'border-l-cyber-yellow', glow: 'shadow-cyber-yellow/20' },
-  completed: { border: 'border-l-cyber-green', glow: 'shadow-cyber-green/20' },
+const statusColors: Record<TaskStatus, { 
+  border: string; 
+  accent: string; 
+  bg: string;
+  glow: string;
+}> = {
+  backlog: { 
+    border: 'border-l-accent-tertiary', 
+    accent: 'text-accent-tertiary', 
+    bg: 'bg-accent-tertiary',
+    glow: 'hover:shadow-[0_0_15px_rgba(139,92,246,0.15)]'
+  },
+  todo: { 
+    border: 'border-l-accent-danger', 
+    accent: 'text-accent-danger', 
+    bg: 'bg-accent-danger',
+    glow: 'hover:shadow-[0_0_15px_rgba(239,68,68,0.15)]'
+  },
+  in_progress: { 
+    border: 'border-l-cyber-orange', 
+    accent: 'text-cyber-orange', 
+    bg: 'bg-cyber-orange',
+    glow: 'hover:shadow-[0_0_15px_rgba(249,115,22,0.15)]'
+  },
+  review: { 
+    border: 'border-l-accent-warning', 
+    accent: 'text-accent-warning', 
+    bg: 'bg-accent-warning',
+    glow: 'hover:shadow-[0_0_15px_rgba(245,158,11,0.15)]'
+  },
+  completed: { 
+    border: 'border-l-accent-primary', 
+    accent: 'text-accent-primary', 
+    bg: 'bg-accent-primary',
+    glow: 'hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+  },
 };
 
 interface KanbanBoardProps {
@@ -57,11 +87,11 @@ interface KanbanBoardProps {
 }
 
 const columnConfig: Record<TaskStatus, { title: string; icon: typeof Inbox; color: string }> = {
-  backlog: { title: 'Backlog', icon: Inbox, color: 'cyber-purple' },
-  todo: { title: 'Todo', icon: ListTodo, color: 'cyber-red' },
+  backlog: { title: 'Backlog', icon: Inbox, color: 'accent-tertiary' },
+  todo: { title: 'Todo', icon: ListTodo, color: 'accent-danger' },
   in_progress: { title: 'In Progress', icon: Play, color: 'cyber-orange' },
-  review: { title: 'Review', icon: Eye, color: 'cyber-yellow' },
-  completed: { title: 'Completed', icon: CheckCircle2, color: 'cyber-green' },
+  review: { title: 'Review', icon: Eye, color: 'accent-warning' },
+  completed: { title: 'Completed', icon: CheckCircle2, color: 'accent-primary' },
 };
 
 interface TaskCardProps {
@@ -71,13 +101,6 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, agents, isDragging }: TaskCardProps) {
-  console.log('TaskCard render:', { 
-    taskId: task.id, 
-    agentId: task.agentId, 
-    agentIdType: typeof task.agentId, 
-    foundAgent: agents.find(a => a.id === task.agentId),
-    agentsList: agents
-  });
   const agent = agents.find(a => a.id === task.agentId);
   const statusStyle = statusColors[task.status];
   const relativeTime = getRelativeTime(task.updatedAt || task.createdAt);
@@ -85,54 +108,61 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
   return (
     <div 
       className={`
-        group relative p-2.5 sm:p-3 bg-cyber-dark border border-white/10 rounded-lg transition-all
-        border-l-2 ${statusStyle.border} touch-manipulation
-        ${isDragging ? 'shadow-lg shadow-cyber-green/30 opacity-90 scale-[1.02]' : `hover:border-white/20 hover:${statusStyle.glow} active:scale-[0.98]`}
+        group relative p-3.5 rounded-xl border border-white/5 
+        bg-gradient-to-br from-claw-card to-claw-surface
+        transition-all duration-200
+        border-l-[3px] ${statusStyle.border} touch-manipulation
+        ${isDragging 
+          ? 'shadow-lg shadow-accent-primary/20 scale-[1.02] border-accent-primary/30' 
+          : `hover:border-white/10 ${statusStyle.glow} active:scale-[0.98]`
+        }
       `}
     >
-      {/* Drag Handle - always visible on touch devices */}
-      <div className="absolute top-2 right-2 opacity-50 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-        <GripVertical className="w-4 h-4 text-gray-500 cursor-grab" />
+      {/* Drag Handle */}
+      <div className="absolute top-3 right-3 opacity-40 sm:opacity-0 sm:group-hover:opacity-60 transition-opacity">
+        <GripVertical className="w-4 h-4 text-accent-muted cursor-grab active:cursor-grabbing" />
       </div>
       
       {/* Title */}
-      <h4 className="text-sm font-semibold text-white pr-6 leading-tight">{task.title}</h4>
+      <h4 className="text-sm font-semibold text-white pr-6 leading-snug line-clamp-2">
+        {task.title}
+      </h4>
       
       {/* Description */}
       {task.description && (
-        <p className="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">
+        <p className="text-xs text-accent-muted mt-2 line-clamp-2 leading-relaxed">
           {task.description}
         </p>
       )}
       
       {/* Footer: Agent + Timestamp */}
-      <div className="flex items-center justify-between mt-2.5 sm:mt-3 pt-2 border-t border-white/5 gap-2">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5 gap-2">
         {/* Agent Badge */}
         {agent ? (
-          <div className="flex items-center gap-1.5 min-w-0">
-            <div className="w-5 h-5 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-cyber-blue/30 to-cyber-purple/30 border border-cyber-blue/30 flex items-center justify-center flex-shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-secondary/20 to-accent-tertiary/10 border border-white/10 flex items-center justify-center flex-shrink-0">
               {agent.avatar ? (
-                <img src={agent.avatar} alt="" className="w-full h-full rounded-full object-cover" />
+                <img src={agent.avatar} alt="" className="w-full h-full rounded-lg object-cover" />
               ) : (
-                <Bot className="w-3 h-3 text-cyber-blue" />
+                <Bot className="w-3.5 h-3.5 text-accent-secondary" />
               )}
             </div>
-            <span className="text-[10px] font-medium text-cyber-blue/80 truncate max-w-[70px] sm:max-w-[80px]">
+            <span className="text-[11px] font-medium text-accent-secondary truncate max-w-[80px]">
               {agent.name}
             </span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 opacity-50 min-w-0">
-            <div className="w-5 h-5 rounded-full bg-gray-700/50 border border-gray-600/30 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-3 h-3 text-gray-500" />
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 rounded-lg bg-accent-muted/10 border border-white/5 flex items-center justify-center flex-shrink-0">
+              <Bot className="w-3.5 h-3.5 text-accent-muted" />
             </div>
-            <span className="text-[10px] text-gray-500">Unassigned</span>
+            <span className="text-[11px] text-accent-muted">Unassigned</span>
           </div>
         )}
         
         {/* Timestamp */}
         {relativeTime && (
-          <div className="flex items-center gap-1 text-gray-500 flex-shrink-0">
+          <div className="flex items-center gap-1.5 text-accent-muted flex-shrink-0">
             <Clock className="w-3 h-3" />
             <span className="text-[10px] font-mono">{relativeTime}</span>
           </div>
@@ -188,28 +218,33 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
   return (
     <div 
       ref={setNodeRef}
-      className="flex flex-col h-full bg-black/30 border border-white/5 rounded-xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 max-w-[90vw] md:max-w-none snap-center flex-shrink-0 md:flex-shrink"
+      className="flex flex-col h-full bg-claw-surface/30 border border-white/5 rounded-2xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 max-w-[90vw] md:max-w-none snap-center flex-shrink-0 md:flex-shrink backdrop-blur-sm"
     >
-      <div className={`p-2 sm:p-3 border-b border-${config.color}/20 bg-${config.color}/5`}>
-        <div className="flex items-center gap-2">
-          <Icon className={`w-4 h-4 text-${config.color}`} />
-          <h3 className={`text-xs sm:text-sm font-bold uppercase tracking-wider text-${config.color}`}>
+      <div className={`p-3 border-b border-white/5 bg-claw-surface/50`}>
+        <div className="flex items-center gap-2.5">
+          <div className={`w-7 h-7 rounded-lg bg-${config.color}/10 flex items-center justify-center`}>
+            <Icon className={`w-4 h-4 text-${config.color}`} />
+          </div>
+          <h3 className={`text-sm font-semibold text-${config.color}`}>
             {config.title}
           </h3>
-          <span className={`ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded bg-${config.color}/20 text-${config.color}`}>
+          <span className={`ml-auto text-[11px] font-mono font-medium px-2 py-0.5 rounded-md bg-${config.color}/10 text-${config.color}`}>
             {tasks.length}
           </span>
         </div>
       </div>
-      <div className="flex-1 p-1.5 sm:p-2 overflow-y-auto space-y-2 min-h-[200px]">
+      <div className="flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px]">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map(task => (
             <SortableTask key={task.id} task={task} agents={agents} />
           ))}
         </SortableContext>
         {tasks.length === 0 && (
-          <div className="h-full flex items-center justify-center text-gray-600 text-xs">
-            Drop tasks here
+          <div className="h-full flex items-center justify-center text-accent-muted/50 text-xs py-8">
+            <div className="text-center">
+              <Icon className="w-8 h-8 mx-auto mb-2 opacity-30" />
+              <p>No tasks</p>
+            </div>
           </div>
         )}
       </div>
@@ -217,8 +252,25 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
   );
 }
 
+function ColumnSkeleton() {
+  return (
+    <div className="flex flex-col h-full bg-claw-surface/30 border border-white/5 rounded-2xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 snap-center">
+      <div className="p-3 border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-white/5 animate-pulse" />
+          <div className="h-4 w-20 bg-white/5 rounded animate-pulse" />
+        </div>
+      </div>
+      <div className="flex-1 p-2 space-y-2">
+        {[1, 2].map(i => (
+          <div key={i} className="h-24 bg-claw-card rounded-xl animate-pulse" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoardProps) {
-  console.log('KanbanBoard render:', { kanbanKeys: Object.keys(kanban), agentsCount: agents.length, agents });
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -248,13 +300,11 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
     const task = allTasks.find(t => t.id === taskId);
     if (!task) return;
 
-    // Check if dropped on a column
     let newStatus: TaskStatus | null = null;
     
     if (columns.includes(over.id as TaskStatus)) {
       newStatus = over.id as TaskStatus;
     } else {
-      // Dropped on another task - find which column it's in
       const overTask = allTasks.find(t => t.id === over.id);
       if (overTask) {
         newStatus = overTask.status;
@@ -268,11 +318,10 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
 
   if (loading) {
     return (
-      <div className="h-full p-2 sm:p-4">
-        {/* Mobile: horizontal scroll skeleton */}
-        <div className="flex md:grid md:grid-cols-5 gap-2 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory pb-2 md:pb-0">
+      <div className="h-full p-3 sm:p-4">
+        <div className="flex md:grid md:grid-cols-5 gap-3 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory pb-2 md:pb-0">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="bg-black/30 rounded-xl animate-pulse min-w-[280px] sm:min-w-[300px] md:min-w-0 snap-center" />
+            <ColumnSkeleton key={i} />
           ))}
         </div>
       </div>
@@ -280,15 +329,14 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
   }
 
   return (
-    <div className="h-full p-2 sm:p-4 overflow-hidden">
+    <div className="h-full p-3 sm:p-4 overflow-hidden">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        {/* Mobile: horizontal scroll, Desktop: grid */}
-        <div className="flex md:grid md:grid-cols-5 gap-2 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory md:snap-none pb-2 md:pb-0 scrollbar-thin">
+        <div className="flex md:grid md:grid-cols-5 gap-3 sm:gap-4 h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory md:snap-none pb-2 md:pb-0 scrollbar-thin">
           {columns.map(status => (
             <KanbanColumn
               key={status}
