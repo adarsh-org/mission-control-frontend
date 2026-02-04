@@ -188,7 +188,7 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
   return (
     <div 
       ref={setNodeRef}
-      className="flex flex-col h-full bg-black/30 border border-white/5 rounded-xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 snap-center flex-shrink-0 md:flex-shrink"
+      className="flex flex-col h-full bg-black/30 border border-white/5 rounded-xl overflow-hidden min-w-[280px] sm:min-w-[300px] md:min-w-0 max-w-[90vw] md:max-w-none snap-center flex-shrink-0 md:flex-shrink"
     >
       <div className={`p-2 sm:p-3 border-b border-${config.color}/20 bg-${config.color}/5`}>
         <div className="flex items-center gap-2">
