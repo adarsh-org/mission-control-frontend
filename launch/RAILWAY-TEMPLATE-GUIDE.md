@@ -8,7 +8,7 @@ Quick guide to publish Claw Control as a Railway template.
 
 1. Go to [railway.app](https://railway.app) and login
 2. Click **"New Project"** → **"Deploy from GitHub repo"**
-3. Select `gokuclaw-adarsh/claw-control`
+3. Select `adarshmishra07/claw-control`
 4. Railway will auto-detect the monorepo structure
 
 ### Configure Services:
@@ -55,7 +55,7 @@ Quick guide to publish Claw Control as a Railway template.
    - **Name:** `Claw Control`
    - **Description:** `Kanban for AI Agents - coordinate your AI team with style`
    - **Icon:** Upload the lobster emoji or logo
-   - **Repo:** `gokuclaw-adarsh/claw-control`
+   - **Repo:** `adarshmishra07/claw-control`
 
 5. Click **"Publish Template"**
 

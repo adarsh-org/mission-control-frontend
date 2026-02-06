@@ -69,7 +69,7 @@ Plus Server-Sent Events for real-time dashboard updates.
 
 ### Getting started:
 ```bash
-git clone https://github.com/gokuclaw-adarsh/claw-control.git
+git clone https://github.com/adarshmishra07/claw-control.git
 cd claw-control/packages/backend
 npm install
 echo "DATABASE_URL=sqlite:./data/claw.db" > .env
@@ -78,7 +78,7 @@ npm run migrate && npm start
 
 Dashboard at `localhost:5173`, API at `localhost:3001`.
 
-**Repo:** https://github.com/gokuclaw-adarsh/claw-control
+**Repo:** https://github.com/adarshmishra07/claw-control
 
 MIT licensed. Contributions welcome - especially if anyone wants to improve the MCP tooling or add more Claude-specific features.
 

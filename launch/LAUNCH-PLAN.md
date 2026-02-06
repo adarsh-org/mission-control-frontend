@@ -1,6 +1,6 @@
 # 🦞 Claw Control Launch Plan
 
-> **Twitter:** @0xadarshmishra | **Repo:** github.com/gokuclaw-adarsh/claw-control
+> **Twitter:** @0xadarshmishra | **Repo:** github.com/adarshmishra07/claw-control
 
 ---
 
@@ -101,7 +101,7 @@ Not for: People who think AI is just ChatGPT 😅
 ```
 Get started in 60 seconds:
 
-git clone github.com/gokuclaw-adarsh/claw-control
+git clone github.com/adarshmishra07/claw-control
 cd claw-control/packages/backend
 npm install && npm start
 
@@ -115,7 +115,7 @@ SQLite just works.
 ```
 If you're building with AI agents, give it a try:
 
-⭐ Star: github.com/gokuclaw-adarsh/claw-control
+⭐ Star: github.com/adarshmishra07/claw-control
 📖 Docs: [docs link]
 🤝 Contribute: PRs welcome!
 
@@ -164,7 +164,7 @@ Claw Control is a real-time Kanban dashboard for coordinating AI agent workflows
 
 Zero setup for local dev—SQLite bundled, just `npm install && npm start`.
 
-GitHub: https://github.com/gokuclaw-adarsh/claw-control
+GitHub: https://github.com/adarshmishra07/claw-control
 MIT licensed
 
 Would love feedback: Is this solving a real problem? What integrations would be most useful?

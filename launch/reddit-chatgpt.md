@@ -45,7 +45,7 @@ Your AI assistant can update its status and post messages:
 
 And you see it all in real-time on the dashboard.
 
-**GitHub:** https://github.com/gokuclaw-adarsh/claw-control
+**GitHub:** https://github.com/adarshmishra07/claw-control
 
 If you're using AI agents and want a better way to keep track of everything, give it a try. Or if you just think it's a cool project, a ⭐ on GitHub helps visibility!
 

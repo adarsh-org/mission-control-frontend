@@ -27,7 +27,7 @@ Claw Control is a real-time Kanban dashboard for coordinating AI agent workflows
 Zero setup for local dev—SQLite bundled, just `npm install && npm start`. Docker available for production deployments.
 
 **Links:**
-- GitHub: https://github.com/gokuclaw-adarsh/claw-control
+- GitHub: https://github.com/adarshmishra07/claw-control
 - MIT licensed
 
 This started as an internal tool for managing our own AI workflows and we decided to open-source it. Still in alpha—the UI has a cyberpunk aesthetic that might not be everyone's taste, and we're working on better docs.

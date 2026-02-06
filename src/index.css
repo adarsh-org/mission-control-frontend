@@ -1,8 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* OpenClaw Design System - Updated Fonts */
+/* DM Sans for headings, Fragment Mono for body */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fragment+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* shadcn/ui CSS Variables - Dark theme with Coral (#FF6B6B) accent */
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 100% 71%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 100% 71%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 17%;
+    --input: 0 0% 17%;
+    --ring: 0 100% 71%;
+    --radius: 0.5rem;
+    color-scheme: dark;
+  }
+}
 
 :root {
   color-scheme: dark;
@@ -10,11 +39,13 @@
 
 body {
   @apply bg-claw-bg text-gray-100 font-sans overflow-hidden antialiased;
+  font-family: 'Fragment Mono', 'JetBrains Mono', monospace;
+  /* Updated: coral/red gradients instead of green/cyan */
   background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    #0a0b0d;
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 107, 107, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(232, 85, 85, 0.05) 0%, transparent 50%),
+    #0A0A0A;
 }
 
 /* Subtle noise texture overlay */
@@ -42,13 +73,17 @@ body {
   @apply bg-accent-primary/30 rounded-full hover:bg-accent-primary/50 transition-colors;
 }
 
-/* Subtle glow effects */
+/* Subtle glow effects - Updated to coral */
 .text-glow {
-  text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
 }
 
-.text-glow-cyan {
-  text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+.text-glow-coral {
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
 /* Card glass effect */
@@ -134,7 +169,8 @@ body {
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.1), transparent);
+  /* Updated: coral gradient instead of green/cyan */
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(239, 68, 68, 0.1), transparent);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;

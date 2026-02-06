@@ -53,7 +53,7 @@ curl -X POST http://localhost:3001/api/messages \
 
 **Quick start with SQLite (30 seconds):**
 ```bash
-git clone https://github.com/gokuclaw-adarsh/claw-control.git
+git clone https://github.com/adarshmishra07/claw-control.git
 cd claw-control/packages/backend
 npm install
 echo "DATABASE_URL=sqlite:./data/claw.db" > .env
@@ -67,7 +67,7 @@ npm run migrate && npm start
 
 Mainly scratching my own itch here, but figured others running multi-agent setups might find it useful.
 
-**Repo:** https://github.com/gokuclaw-adarsh/claw-control
+**Repo:** https://github.com/adarshmishra07/claw-control
 
 MIT licensed. PRs welcome if you want to improve it.
 

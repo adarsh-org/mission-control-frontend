@@ -17,7 +17,7 @@ Track tasks. Monitor status. Coordinate your AI team.
 
 Open source. MIT licensed. Built for the agentic era.
 
-🔗 github.com/gokuclaw-adarsh/claw-control
+🔗 github.com/adarshmishra07/claw-control
 
 🧵👇
 
@@ -94,7 +94,7 @@ If you're doing anything agentic in 2026, you need this.
 **Try it in 60 seconds:**
 
 ```
-git clone github.com/gokuclaw-adarsh/claw-control
+git clone github.com/adarshmishra07/claw-control
 cd claw-control/packages/backend
 npm i && npm run migrate && npm start
 ```
@@ -120,7 +120,7 @@ That's it. You're live.
 
 We're shipping fast and listening to feedback.
 
-github.com/gokuclaw-adarsh/claw-control
+github.com/adarshmishra07/claw-control
 
 #OpenSource #AIAgents #DevTools #BuildInPublic
 

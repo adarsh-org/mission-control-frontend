@@ -84,7 +84,7 @@ We believe the tools for managing AI should be as accessible as the AI itself. C
 ### Get Started in 60 Seconds
 
 ```bash
-git clone https://github.com/gokuclaw-adarsh/claw-control.git
+git clone https://github.com/adarshmishra07/claw-control.git
 cd claw-control/packages/backend && npm install && npm start
 cd ../frontend && npm install && npm run dev
 ```
@@ -179,7 +179,7 @@ That's it. No complex setup, no external services required.
 
 **Twitter/X:** [@0xadarshmishra](https://twitter.com/0xadarshmishra)
 
-**GitHub:** [gokuclaw-adarsh](https://github.com/gokuclaw-adarsh)
+**GitHub:** [adarshmishra07](https://github.com/adarshmishra07)
 
 **Website:** https://openclaw.dev
 
