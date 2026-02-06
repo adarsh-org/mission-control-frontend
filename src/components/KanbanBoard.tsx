@@ -72,10 +72,10 @@ const statusColors: Record<TaskStatus, {
     glow: 'hover:shadow-[0_0_15px_rgba(245,158,11,0.15)]'
   },
   completed: { 
-    border: 'border-l-accent-primary', 
-    accent: 'text-accent-primary', 
-    bg: 'bg-accent-primary',
-    glow: 'hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+    border: 'border-l-cyber-green', 
+    accent: 'text-cyber-green', 
+    bg: 'bg-cyber-green',
+    glow: 'hover:shadow-[0_0_15px_rgba(34,197,94,0.15)]'
   },
 };
 
@@ -91,7 +91,7 @@ const columnConfig: Record<TaskStatus, { title: string; icon: typeof Inbox; colo
   todo: { title: 'Todo', icon: ListTodo, color: 'accent-danger' },
   in_progress: { title: 'In Progress', icon: Play, color: 'cyber-orange' },
   review: { title: 'Review', icon: Eye, color: 'accent-warning' },
-  completed: { title: 'Completed', icon: CheckCircle2, color: 'accent-primary' },
+  completed: { title: 'Completed', icon: CheckCircle2, color: 'cyber-green' },
 };
 
 interface TaskCardProps {
