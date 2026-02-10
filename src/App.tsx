@@ -209,7 +209,7 @@ function Dashboard() {
     if (data.tasks) setTasks(data.tasks.map(transformTask));
   }, [setAgents, setTasks]);
 
-  const { connected } = useSSE(
+  useSSE(
     handleAgentUpdate,
     handleTaskUpdate,
     handleMessageUpdate,
