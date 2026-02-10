@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Wifi, WifiOff, Bot, LayoutGrid, MessageSquare, Plane, Home } from 'lucide-react';
+import { Wifi, WifiOff, Bot, LayoutGrid, MessageSquare, ArrowLeft } from 'lucide-react';
 import { AgentsList } from './components/AgentsList';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AgentChat } from './components/AgentChat';
@@ -17,46 +17,25 @@ function Header({ connected }: { connected: boolean }) {
   return (
     <header className="h-14 sm:h-16 px-4 sm:px-6 border-b border-white/5 bg-claw-surface/80 backdrop-blur-md flex items-center justify-between">
       <div className="flex items-center gap-3">
+        {isTripPlanner && (
+          <Link to="/" className="p-2 -ml-2 rounded-lg hover:bg-white/5 transition-colors">
+            <ArrowLeft className="w-5 h-5 text-accent-muted" />
+          </Link>
+        )}
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 border border-accent-primary/30 flex items-center justify-center text-lg">
           🦞
         </div>
         <div>
           <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
-            Mission Control
+            {isTripPlanner ? 'Trip Planner' : 'Mission Control'}
           </h1>
           <p className="text-[10px] text-accent-muted font-medium tracking-wide uppercase hidden sm:block">
-            Agent Operations Center
+            {isTripPlanner ? 'Compare Destinations' : 'Agent Operations Center'}
           </p>
         </div>
       </div>
       
       <div className="flex items-center gap-4">
-        {/* Nav Links */}
-        <nav className="hidden sm:flex items-center gap-2">
-          <Link
-            to="/"
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              !isTripPlanner 
-                ? 'bg-accent-primary/20 text-accent-primary' 
-                : 'text-accent-muted hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <Home className="w-4 h-4" />
-            Dashboard
-          </Link>
-          <Link
-            to="/trip-planner"
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              isTripPlanner 
-                ? 'bg-accent-primary/20 text-accent-primary' 
-                : 'text-accent-muted hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <Plane className="w-4 h-4" />
-            Trip Planner
-          </Link>
-        </nav>
-
         {/* Connection Status */}
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
           connected 
@@ -94,25 +73,9 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
   const location = useLocation();
   const isTripPlanner = location.pathname === '/trip-planner';
 
+  // Hide mobile nav on trip planner page
   if (isTripPlanner) {
-    return (
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-claw-surface/95 border-t border-white/5 backdrop-blur-lg z-40 flex items-center justify-around px-4 safe-area-pb">
-        <Link
-          to="/"
-          className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-muted hover:text-gray-300 hover:bg-white/5"
-        >
-          <Home className="w-5 h-5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
-        </Link>
-        <Link
-          to="/trip-planner"
-          className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-primary bg-accent-primary/10"
-        >
-          <Plane className="w-5 h-5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Trip</span>
-        </Link>
-      </nav>
-    );
+    return null;
   }
 
   const tabs = [
@@ -152,13 +115,6 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
           </button>
         );
       })}
-      <Link
-        to="/trip-planner"
-        className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-muted hover:text-gray-300 hover:bg-white/5"
-      >
-        <Plane className="w-5 h-5" />
-        <span className="text-[10px] font-semibold uppercase tracking-wider">Trip</span>
-      </Link>
     </nav>
   );
 }
@@ -276,6 +232,7 @@ function Dashboard() {
     </>
   );
 }
+
 export default function App() {
   const { connected } = useSSE(() => {}, () => {}, () => {}, () => {});
 
