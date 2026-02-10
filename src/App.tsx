@@ -278,7 +278,7 @@ function Dashboard() {
 }
 
 export default function App() {
-  const { connected } = useSSE(() => {}, () => {}, () => {}, () => {});
+  useSSE(() => {}, () => {}, () => {}, () => {});
 
   return (
     <div className="h-screen flex flex-col bg-claw-bg text-white overflow-hidden">
