@@ -99,7 +99,7 @@ const destinations: Destination[] = [
         title: 'Back to Varkala & Papanasam',
         activities: [
           { time: 'morning', title: 'Leisure Morning', description: 'Sleep in or enjoy a slow breakfast at a cliff cafe overlooking the sea.', duration: '3 hrs', cost: { budget: 300, mid: 600, premium: 1000 }, tip: 'Try the Tibetan breakfast at Tibeits' },
-          { time: 'afternoon', title: 'Papanasam Beach Activities', description: 'Swimming, body surfing, or just sunbathing at the Black Sand Beach.', duration: '4 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Currents can be strong, stay in designated areas' },
+          { time: 'afternoon', title: 'Surfing & Beach Time', description: 'Take a surfing lesson (Varkala is great for beginners!) or relax on the Black Sand Beach.', duration: '4 hrs', cost: { budget: 1500, mid: 2500, premium: 4000 }, mustDo: true, tip: 'Book a lesson with Soul & Surf or local schools' },
           { time: 'evening', title: 'Sunset at Edava Beach', description: 'Short auto ride to Edava. Quieter beach with beautiful backwater-sea confluence.', duration: '3 hrs', cost: { budget: 200, mid: 400, premium: 800 }, transport: 'Auto/Taxi', mustDo: true }
         ]
       },
