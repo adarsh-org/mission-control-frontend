@@ -96,11 +96,11 @@ const destinations: Destination[] = [
       },
       {
         day: 4,
-        title: 'Alleppey Backwaters',
+        title: 'Back to Varkala & Papanasam',
         activities: [
-          { time: 'morning', title: 'Drive to Alleppey', description: 'Early morning drive (2.5 hrs) to Alleppey for backwater experience.', duration: '3 hrs', cost: { budget: 1000, mid: 1500, premium: 2500 }, transport: 'Taxi' },
-          { time: 'afternoon', title: 'Houseboat Cruise', description: 'Cruise through Kerala backwaters. Includes lunch on boat, village views.', duration: '5 hrs', cost: { budget: 3000, mid: 5000, premium: 10000 }, mustDo: true, tip: 'Book shared boat for budget, private for premium' },
-          { time: 'evening', title: 'Return to Varkala', description: 'Drive back to Varkala. Dinner at favorite cliff restaurant.', duration: '3 hrs', cost: { budget: 1500, mid: 2000, premium: 3500 }, transport: 'Taxi' }
+          { time: 'morning', title: 'Leisure Morning', description: 'Sleep in or enjoy a slow breakfast at a cliff cafe overlooking the sea.', duration: '3 hrs', cost: { budget: 300, mid: 600, premium: 1000 }, tip: 'Try the Tibetan breakfast at Tibeits' },
+          { time: 'afternoon', title: 'Papanasam Beach Activities', description: 'Swimming, body surfing, or just sunbathing at the Black Sand Beach.', duration: '4 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Currents can be strong, stay in designated areas' },
+          { time: 'evening', title: 'Sunset at Edava Beach', description: 'Short auto ride to Edava. Quieter beach with beautiful backwater-sea confluence.', duration: '3 hrs', cost: { budget: 200, mid: 400, premium: 800 }, transport: 'Auto/Taxi', mustDo: true }
         ]
       },
       {
