@@ -64,16 +64,16 @@ const destinations: Destination[] = [
     flightCosts: { Mumbai: 8000, Pune: 9500, Indore: 13000 },
     stayCost: '₹4K/night/room',
     duration: '5 Days',
-    highlights: ['Cliff-top cafes', 'Ayurveda spa', 'Backwaters', 'Pristine beaches'],
+    highlights: ['Cliff-top cafes', 'Ayurveda spa', 'Edava Beach', 'Surfing'],
     notes: ['Best time: Oct-Mar', 'Peaceful beach vibes', '3 rooms needed for 6 people'],
     itinerary: [
       {
         day: 1,
         title: 'Arrival & Cliff Sunset',
         activities: [
-          { time: 'morning', title: 'Fly to Trivandrum', description: 'Arrival & Transfer (2.5-3 hrs)', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true },
-          { time: 'afternoon', title: 'Transfer to Varkala', description: 'Scenic 1-hour drive to Varkala Cliff area. Check into resort.', duration: '2 hrs', cost: { budget: 500, mid: 800, premium: 1500 }, transport: 'Taxi/Cab', tip: 'Book hotel near North Cliff for best views' },
-          { time: 'evening', title: 'Varkala Cliff Sunset', description: 'Watch spectacular sunset from the cliff. Explore cliff-top cafes and shops.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 }, mustDo: true, tip: 'Try the fresh seafood at cliff restaurants' }
+          { time: 'morning', title: 'Fly to Trivandrum (TRV)', description: 'Arrival & Transfer (1.5 hrs). Prepaid taxi from airport is reliable.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true },
+          { time: 'afternoon', title: 'Transfer to Varkala', description: 'Scenic 1.5-hour drive to Varkala North Cliff. Check into resort (e.g., Clafouti or Krishnatheeram).', duration: '2 hrs', cost: { budget: 1500, mid: 1800, premium: 2500 }, transport: 'Taxi/Cab', tip: 'Book hotel on North Cliff for direct sea views' },
+          { time: 'evening', title: 'Sunset at Cafe del Mar', description: 'Watch spectacular sunset from the cliff. Dinner at Cafe del Mar or Darjeeling Cafe.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 }, mustDo: true, tip: 'Try the seafood platter and momos' }
         ]
       },
       {
@@ -81,17 +81,17 @@ const destinations: Destination[] = [
         title: 'Beach Day & North Cliff',
         activities: [
           { time: 'morning', title: 'Papanasam Beach', description: 'Relax at the holy Papanasam Beach. Early morning is best for swimming.', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Beach is less crowded before 10 AM' },
-          { time: 'afternoon', title: 'North Cliff Exploration', description: 'Walk along the cliff path. Browse handicraft shops, try local cafes.', duration: '3 hrs', cost: { budget: 800, mid: 1500, premium: 2500 }, tip: 'Try banana pancakes at Cafe del Mar' },
-          { time: 'evening', title: 'Beach Sunset Yoga', description: 'Join a yoga session on the beach or cliff. Many free community sessions available.', duration: '2 hrs', cost: { budget: 0, mid: 500, premium: 1000 }, canSkip: true }
+          { time: 'afternoon', title: 'North Cliff Shopping', description: 'Walk along the cliff path. Shop for Tibetan artifacts and spices. Lunch at Abba Restaurant (Swedish bakery).', duration: '3 hrs', cost: { budget: 800, mid: 1500, premium: 2500 }, tip: 'Great cinnamon rolls at Abba' },
+          { time: 'evening', title: 'Beach Sunset Yoga', description: 'Join a drop-in yoga session at Soul & Surf or local shala.', duration: '2 hrs', cost: { budget: 300, mid: 500, premium: 1000 }, canSkip: true }
         ]
       },
       {
         day: 3,
         title: 'Ayurveda & Relaxation',
         activities: [
-          { time: 'morning', title: 'Ayurveda Spa Session', description: 'Traditional Kerala Ayurvedic massage and treatments. Book at resort or local spa.', duration: '3 hrs', cost: { budget: 1500, mid: 3000, premium: 6000 }, mustDo: true, tip: 'Opt for Abhyanga (oil massage) for first-timers' },
-          { time: 'afternoon', title: 'Papanasam Beach', description: 'Post-treatment relaxation at the beach. Light lunch at beachside shack.', duration: '3 hrs', cost: { budget: 400, mid: 800, premium: 1500 } },
-          { time: 'evening', title: 'Janardhana Swamy Temple', description: 'Visit the 2000-year-old cliff-side temple. Beautiful evening aarti.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, canSkip: true, tip: 'Dress modestly for temple visit' }
+          { time: 'morning', title: 'Ayurveda Spa Session', description: 'Traditional Kerala Ayurvedic massage. Try scientifically verified centers like AyurSoul.', duration: '3 hrs', cost: { budget: 1500, mid: 3000, premium: 6000 }, mustDo: true, tip: 'Opt for Abhyanga (oil massage)' },
+          { time: 'afternoon', title: 'Chill at Kappil Beach', description: 'Drive 15 mins to Kappil. Where backwaters meet the sea. Kayaking available.', duration: '3 hrs', cost: { budget: 400, mid: 800, premium: 1500 }, transport: 'Auto' },
+          { time: 'evening', title: 'Dinner at Darjeeling Cafe', description: 'Chill vibe with live music often available.', duration: '2 hrs', cost: { budget: 600, mid: 1200, premium: 2000 }, canSkip: true }
         ]
       },
       {
@@ -99,79 +99,79 @@ const destinations: Destination[] = [
         title: 'Back to Varkala & Papanasam',
         activities: [
           { time: 'morning', title: 'Leisure Morning', description: 'Sleep in or enjoy a slow breakfast at a cliff cafe overlooking the sea.', duration: '3 hrs', cost: { budget: 300, mid: 600, premium: 1000 }, tip: 'Try the Tibetan breakfast at Tibeits' },
-          { time: 'afternoon', title: 'Surfing & Beach Time', description: 'Take a surfing lesson (Varkala is great for beginners!) or relax on the Black Sand Beach.', duration: '4 hrs', cost: { budget: 1500, mid: 2500, premium: 4000 }, mustDo: true, tip: 'Book a lesson with Soul & Surf or local schools' },
-          { time: 'evening', title: 'Sunset at Edava Beach', description: 'Short auto ride to Edava. Quieter beach with beautiful backwater-sea confluence.', duration: '3 hrs', cost: { budget: 200, mid: 400, premium: 800 }, transport: 'Auto/Taxi', mustDo: true }
+          { time: 'afternoon', title: 'Surfing & Beach Time', description: 'Take a surfing lesson (beginner friendly!) with Soul & Surf or Moon Waves.', duration: '4 hrs', cost: { budget: 1500, mid: 2500, premium: 4000 }, mustDo: true, tip: 'Best swell usually in morning/late afternoon' },
+          { time: 'evening', title: 'Sunset at Edava Beach', description: 'Short auto ride to Edava. Quieter beach with beautiful blue lagoon.', duration: '3 hrs', cost: { budget: 200, mid: 400, premium: 800 }, transport: 'Auto/Taxi', mustDo: true }
         ]
       },
       {
         day: 5,
         title: 'Kovalam & Departure',
         activities: [
-          { time: 'morning', title: 'Checkout & Kovalam Beach', description: 'Check out, drive to Kovalam (1 hr). Famous lighthouse beach visit.', duration: '3 hrs', cost: { budget: 600, mid: 1000, premium: 1500 }, transport: 'Taxi', tip: 'Climb lighthouse for panoramic views (₹50)' },
-          { time: 'afternoon', title: 'Beach Time & Lunch', description: 'Relax at Kovalam. Fresh seafood lunch at German Bakery or local restaurant.', duration: '3 hrs', cost: { budget: 600, mid: 1200, premium: 2000 }, canSkip: true },
-          { time: 'evening', title: 'Fly Home', description: 'Transfer to Trivandrum airport. Evening flight back.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true }
+          { time: 'morning', title: 'Checkout & Kovalam', description: 'Check out, drive to Kovalam (1 hr). Visit the iconic lighthouse.', duration: '3 hrs', cost: { budget: 1500, mid: 2000, premium: 2500 }, transport: 'Taxi', tip: 'Climb lighthouse for panoramic views (₹50)' },
+          { time: 'afternoon', title: 'Lunch at German Bakery', description: 'Famous spot in Kovalam for seafood and pastries.', duration: '2 hrs', cost: { budget: 600, mid: 1200, premium: 2000 }, canSkip: true },
+          { time: 'evening', title: 'Fly Home', description: 'Transfer to Trivandrum airport (30 mins from Kovalam). Evening flight.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true }
         ]
       }
     ]
   },
   {
     id: 'sri-lanka',
-    name: 'Sri Lanka',
+    name: 'Sri Lanka (South Coast)',
     country: 'South Asia',
     heroImage: 'https://images.unsplash.com/photo-1586394461970-e7f9d0c0541b?w=800&q=80',
     recommendation: 'rushed',
-    recommendationText: 'Rushed for 5 days',
+    recommendationText: 'Optimized for 5 Days',
     weather: { temp: '25-30°C', condition: 'Tropical', icon: 'sun' },
     priceRange: { budget: 45000, mid: 52000, premium: 70000 },
     flightCosts: { Mumbai: 18000, Pune: 22000, Indore: 25000 },
     stayCost: '₹3-5K/night/room',
     duration: '5 Days',
-    highlights: ['Nine Arch Bridge', 'Temple of Tooth', 'Whale watching', 'Scenic train'],
-    notes: ['Visa on arrival', 'Lots of travel between cities', 'Better with 7+ days'],
+    highlights: ['Hiriketiya Beach', 'Galle Fort', 'Whale watching', 'Mirissa Vibes'],
+    notes: ['Route optimized: South Coast Only', 'Skipping Kandy/Ella to save 10+ hrs travel', 'Best beaches in March'],
     itinerary: [
       {
         day: 1,
-        title: 'Colombo Arrival',
+        title: 'Colombo Arrival -> Hiriketiya',
         activities: [
-          { time: 'morning', title: 'Fly to Colombo', description: 'Arrival in Colombo (3-4 hrs). Visa on arrival.', duration: '4 hrs', cost: { budget: 15000, mid: 18000, premium: 25000 }, transport: 'Flight', mustDo: true, tip: 'Get Sri Lankan rupees at airport' },
-          { time: 'afternoon', title: 'Galle Face Green', description: 'Explore the famous oceanfront promenade. Street food, kite flying.', duration: '2 hrs', cost: { budget: 500, mid: 1000, premium: 1500 }, tip: 'Try isso wade (prawn fritters)' },
-          { time: 'evening', title: 'Gangaramaya Temple', description: 'Visit the beautiful Buddhist temple. Evening prayers are magical.', duration: '2 hrs', cost: { budget: 200, mid: 200, premium: 200 }, mustDo: true }
+          { time: 'morning', title: 'Fly to Colombo (CMB)', description: 'Arrival. Visa on arrival. Direct transfer to South Coast via Expressway.', duration: '4 hrs', cost: { budget: 15000, mid: 18000, premium: 25000 }, transport: 'Flight', mustDo: true },
+          { time: 'afternoon', title: 'Drive to Hiriketiya', description: '3-hour drive via highway to Hiriketiya (horseshoe bay). Much faster than hill country.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Private Van', tip: 'Hire a van for the whole trip (~$50-60/day)' },
+          { time: 'evening', title: 'Hiriketiya Chill', description: 'Relax at the horseshoe bay. Surfer vibe, great cafes like Dots Bay House.', duration: '3 hrs', cost: { budget: 1000, mid: 2000, premium: 3000 }, mustDo: true }
         ]
       },
       {
         day: 2,
-        title: 'Scenic Train to Kandy',
+        title: 'Hiriketiya & Tangalle',
         activities: [
-          { time: 'morning', title: 'Train to Kandy', description: 'Scenic 3-hour train ride through tea plantations and mountains.', duration: '4 hrs', cost: { budget: 200, mid: 500, premium: 1500 }, transport: 'Train', mustDo: true, tip: 'Book first class for guaranteed window seat' },
-          { time: 'afternoon', title: 'Kandy Lake Walk', description: 'Stroll around the beautiful Kandy Lake. Check into hotel.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 } },
-          { time: 'evening', title: 'Temple of the Tooth', description: "Visit Sri Lanka's most sacred Buddhist temple. Evening puja ceremony.", duration: '3 hrs', cost: { budget: 1500, mid: 1500, premium: 1500 }, mustDo: true, tip: 'Wear modest clothing covering knees/shoulders' }
+          { time: 'morning', title: 'Surf/Swim at Hiri', description: 'Morning surf lesson or swim. Water is calm in the corner.', duration: '3 hrs', cost: { budget: 2000, mid: 3000, premium: 5000 }, mustDo: true },
+          { time: 'afternoon', title: 'Silent Beach (Tangalle)', description: 'Short drive to Amanwella/Silent Beach. Stunning, empty stretch.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 }, tip: 'Coconut tree rope swing spot nearby' },
+          { time: 'evening', title: 'Dinner at Smoke & Bitters', description: 'Rated among Asia\'s 50 Best Bars. Amazing cocktails and food.', duration: '3 hrs', cost: { budget: 2000, mid: 4000, premium: 6000 }, mustDo: true, tip: 'Book in advance!' }
         ]
       },
       {
         day: 3,
-        title: 'Drive to Ella',
+        title: 'Mirissa & Whales',
         activities: [
-          { time: 'morning', title: 'Drive to Ella', description: 'Scenic 4-hour drive through hill country. Stop at tea factory.', duration: '5 hrs', cost: { budget: 3000, mid: 4000, premium: 6000 }, transport: 'Private Car', tip: 'Visit a tea estate en route' },
-          { time: 'afternoon', title: 'Nine Arch Bridge', description: 'Visit the iconic colonial-era railway bridge. Great for photos.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Train passes at 11:30 AM and 3:30 PM' },
-          { time: 'evening', title: 'Ella Town', description: 'Explore the charming hill town. Great cafes and restaurants.', duration: '3 hrs', cost: { budget: 800, mid: 1500, premium: 2500 } }
+          { time: 'morning', title: 'Drive to Mirissa', description: '1-hour coastal drive. Check into hotel near Mirissa Beach.', duration: '1 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: 'Van' },
+          { time: 'afternoon', title: 'Coconut Tree Hill', description: 'Iconic photo spot. Walk along the coast.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true },
+          { time: 'evening', title: 'Mirissa Beach Party', description: 'Lively beach vibes. Fresh seafood on the sand. Zephyr or Petti Petti.', duration: '4 hrs', cost: { budget: 1500, mid: 3000, premium: 5000 }, tip: 'Pick your fish fresh from the display' }
         ]
       },
       {
         day: 4,
-        title: 'Ella Hike & Mirissa',
+        title: 'Galle Fort History',
         activities: [
-          { time: 'morning', title: "Little Adam's Peak", description: 'Easy sunrise hike with stunning views. 1.5 hrs round trip.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 500 }, mustDo: true, tip: 'Start by 5:30 AM for sunrise' },
-          { time: 'afternoon', title: 'Drive to Mirissa', description: 'Long 4-hour drive to the south coast beaches.', duration: '5 hrs', cost: { budget: 4000, mid: 5000, premium: 8000 }, transport: 'Private Car' },
-          { time: 'evening', title: 'Mirissa Beach Sunset', description: 'Relax on the beautiful crescent beach. Fresh seafood dinner.', duration: '3 hrs', cost: { budget: 1000, mid: 2000, premium: 4000 }, tip: 'Try the grilled lobster!' }
+          { time: 'morning', title: 'Whale Watching (Optional)', description: 'Early morning boat. Blue whales common in March.', duration: '4 hrs', cost: { budget: 4000, mid: 6000, premium: 9000 }, canSkip: true },
+          { time: 'afternoon', title: 'Drive to Galle', description: '45-min drive. Explore the UNESCO Galle Fort. Colonial architecture.', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Walk the ramparts at sunset' },
+          { time: 'evening', title: 'Dinner in the Fort', description: 'Charming streets with boutique shops and cafes. Pedlar\'s Inn or Fort Printers.', duration: '3 hrs', cost: { budget: 1500, mid: 3000, premium: 5000 } }
         ]
       },
       {
         day: 5,
-        title: 'Beach & Departure',
+        title: 'Departure',
         activities: [
-          { time: 'morning', title: 'Whale Watching (Optional)', description: 'Blue whale watching tour. Best Dec-Apr. Skip if prone to seasickness.', duration: '4 hrs', cost: { budget: 4000, mid: 5000, premium: 8000 }, canSkip: true, tip: 'Take motion sickness pills' },
-          { time: 'afternoon', title: 'Beach Time', description: 'Final beach relaxation. Pack and prepare for departure.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 } },
-          { time: 'evening', title: 'Fly Home', description: 'Drive to Colombo airport (3 hrs). Evening flight back.', duration: '5 hrs', cost: { budget: 18000, mid: 20000, premium: 28000 }, transport: 'Flight + Car', mustDo: true }
+          { time: 'morning', title: 'Last Shop & Drive', description: 'Buy Ceylon tea/spices. Drive to Colombo Airport via highway (2 hrs).', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: 'Van' },
+          { time: 'afternoon', title: 'Airport Check-in', description: 'Arrive 3 hours before flight.', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 } },
+          { time: 'evening', title: 'Fly Home', description: 'Evening flight back to India.', duration: '4 hrs', cost: { budget: 18000, mid: 20000, premium: 28000 }, transport: 'Flight', mustDo: true }
         ]
       }
     ]
@@ -188,68 +188,67 @@ const destinations: Destination[] = [
     flightCosts: { Mumbai: 15000, Pune: 18000, Indore: 22000 },
     stayCost: '₹3-6K/night',
     duration: '6 Days',
-    highlights: ['Pangong Lake', 'Nubra Valley', 'Monasteries', 'Mountain passes'],
+    highlights: ['Frozen Pangong', 'Snowy Passes', 'Monasteries', 'Winter Vibes'],
     seasonInfo: 'Season: June - September',
     notes: [
-      '⚠️ March: Risky - flight-only access, extreme cold',
-      '🏍️ Motorcycle rental optional (June-Sept only)',
-      '📅 Best time: June - September',
-      '🫁 High altitude - acclimatization required',
-      '❄️ Pack very warm clothes!'
+      '⚠️ March Reality: Pangong Lake is FROZEN solid.',
+      '❄️ Roads (Chang La/Khardung La) can close anytime due to snow.',
+      '🌡️ Temp drops to -20°C at night. Hotels might not have running water (buckets used).',
+      '🏍️ Biking: Expert ONLY. Black ice risk is high.'
     ],
     itinerary: [
       {
         day: 1,
         title: 'Arrival & Acclimatization',
         activities: [
-          { time: 'morning', title: 'Fly to Leh', description: 'Arrival in Leh (1.5 hrs). Book window seat for Himalayan views!', duration: '2 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight', mustDo: true, tip: 'Flights often delayed due to weather' },
-          { time: 'afternoon', title: 'Rest & Acclimatize', description: 'Essential rest day. Stay at hotel, drink lots of water, avoid exertion.', duration: '5 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Do NOT skip acclimatization - altitude sickness is real!' },
-          { time: 'evening', title: 'Leh Market Walk', description: 'Gentle evening stroll through Leh Main Bazaar. Light dinner.', duration: '2 hrs', cost: { budget: 500, mid: 800, premium: 1500 }, canSkip: true }
+          { time: 'morning', title: 'Fly to Leh', description: 'Arrival in Leh (11,500ft). Spectacular landing.', duration: '2 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight', mustDo: true },
+          { time: 'afternoon', title: 'Strict Bed Rest', description: 'Do NOT sleep, but stay in bed. Body needs to adjust to low oxygen.', duration: '5 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Diamondox usually not needed if you rest properly' },
+          { time: 'evening', title: 'Light Dinner', description: 'Soup and light food. Avoid alcohol completely.', duration: '1 hrs', cost: { budget: 300, mid: 500, premium: 1000 } }
         ]
       },
       {
         day: 2,
-        title: 'Leh Sightseeing',
+        title: 'Local Sightseeing (Acclimatization)',
         activities: [
-          { time: 'morning', title: 'Shanti Stupa', description: 'Visit the iconic white-domed Buddhist stupa. Panoramic views of Leh.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 500 }, mustDo: true, tip: 'Best at sunrise for photos' },
-          { time: 'afternoon', title: 'Leh Palace & Monastery', description: 'Explore the 17th-century royal palace and Namgyal Tsemo monastery.', duration: '3 hrs', cost: { budget: 200, mid: 200, premium: 500 }, mustDo: true },
-          { time: 'evening', title: 'Thiksey Monastery', description: 'Visit the 12-story monastery resembling Potala Palace. Evening prayers.', duration: '3 hrs', cost: { budget: 300, mid: 300, premium: 500 }, tip: 'Morning prayer at 6 AM is spectacular' }
+          { time: 'morning', title: 'Hall of Fame', description: 'War museum run by Indian Army. Very moving.', duration: '2 hrs', cost: { budget: 100, mid: 100, premium: 100 }, mustDo: true },
+          { time: 'afternoon', title: 'Leh Palace & Shanti Stupa', description: 'Short drives. Don\'t climb too many stairs yet.', duration: '3 hrs', cost: { budget: 200, mid: 200, premium: 500 }, mustDo: true },
+          { time: 'evening', title: 'Leh Market', description: 'Buy winter gear if you forgot anything. It will be COLD.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
         ]
       },
       {
         day: 3,
-        title: 'Nubra Valley',
+        title: 'Nubra Valley (If Road Open)',
         activities: [
-          { time: 'morning', title: 'Drive to Nubra via Khardung La', description: "Cross world's highest motorable pass (18,380 ft). Stunning views!", duration: '5 hrs', cost: { budget: 4000, mid: 5000, premium: 8000 }, transport: 'Taxi/SUV', mustDo: true, tip: 'Carry warm clothes, it gets freezing at top' },
-          { time: 'afternoon', title: 'Diskit Monastery', description: 'Visit the 500-year-old monastery with 32m Maitreya Buddha statue.', duration: '2 hrs', cost: { budget: 100, mid: 100, premium: 100 }, mustDo: true },
-          { time: 'evening', title: 'Hunder Sand Dunes', description: 'Unique cold desert. Optional double-humped Bactrian camel ride.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 }, tip: 'Camel ride costs extra ~₹300-500' }
+          { time: 'morning', title: 'Khardung La Pass', description: 'Drive to world\'s highest pass. Likely covered in snow.', duration: '5 hrs', cost: { budget: 4000, mid: 5000, premium: 8000 }, transport: 'Innova (Heated)', mustDo: true, tip: 'Don\'t stay more than 15 mins at top' },
+          { time: 'afternoon', title: 'Diskit Monastery', description: 'Big Maitreya Buddha statue facing the valley.', duration: '2 hrs', cost: { budget: 100, mid: 100, premium: 100 } },
+          { time: 'evening', title: 'Hunder Stay', description: 'Stay in heated guest house. Camps usually closed in March.', duration: '12 hrs', cost: { budget: 2000, mid: 3000, premium: 5000 }, tip: 'Ensure heating is available' }
         ]
       },
       {
         day: 4,
-        title: 'Pangong Lake',
+        title: 'Frozen Pangong Lake',
         activities: [
-          { time: 'morning', title: 'Drive to Pangong Lake', description: 'Scenic 5-hour drive crossing Shyok river and Chang La pass.', duration: '6 hrs', cost: { budget: 5000, mid: 6000, premium: 10000 }, transport: 'Taxi/SUV', mustDo: true },
-          { time: 'afternoon', title: 'Pangong Lake', description: 'Iconic blue lake from 3 Idiots! Spend time at the stunning lakeside.', duration: '4 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Lake changes colors throughout the day' },
-          { time: 'evening', title: 'Lakeside Camp', description: 'Stay in a lakeside camp. Stargazing is incredible here.', duration: '12 hrs', cost: { budget: 2000, mid: 3500, premium: 6000 }, tip: 'No heating in camps - bring warm sleeping bag' }
+          { time: 'morning', title: 'Drive to Pangong (Shyok Route)', description: 'If Shyok route open (check with driver). 5-6 hrs drive.', duration: '6 hrs', cost: { budget: 5000, mid: 6000, premium: 10000 }, transport: 'Innova', mustDo: true },
+          { time: 'afternoon', title: 'Walk on Frozen Lake', description: 'In March, the lake is a solid sheet of ice. You can walk/drive on it!', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Unique winter experience' },
+          { time: 'evening', title: 'Homestay in Spangmik', description: 'Basic wooden cottages with heaters. Luxury camps are closed.', duration: '12 hrs', cost: { budget: 2000, mid: 3000, premium: 4000 } }
         ]
       },
       {
         day: 5,
-        title: 'Return to Leh',
+        title: 'Return to Leh via Chang La',
         activities: [
-          { time: 'morning', title: 'Sunrise at Pangong', description: 'Wake up early for magical sunrise over the lake.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true },
-          { time: 'afternoon', title: 'Drive to Leh', description: 'Return via Chang La pass. Stop at Hemis monastery en route.', duration: '6 hrs', cost: { budget: 5000, mid: 6000, premium: 10000 }, transport: 'Taxi/SUV' },
-          { time: 'evening', title: 'Shopping & Rest', description: 'Pick up souvenirs - Pashmina shawls, Tibetan artifacts, apricot products.', duration: '3 hrs', cost: { budget: 2000, mid: 4000, premium: 8000 }, canSkip: true }
+          { time: 'morning', title: 'Drive back to Leh', description: 'Crossing Chang La pass (very snowy).', duration: '5 hrs', cost: { budget: 5000, mid: 6000, premium: 10000 }, transport: 'Innova' },
+          { time: 'afternoon', title: 'Thiksey Monastery', description: 'Visit on the way back. Beautiful architecture.', duration: '2 hrs', cost: { budget: 100, mid: 100, premium: 100 } },
+          { time: 'evening', title: 'Farewell Dinner', description: 'Celebration dinner at The Tibetan Kitchen (if open) or hotel.', duration: '3 hrs', cost: { budget: 1000, mid: 2000, premium: 3000 } }
         ]
       },
       {
         day: 6,
         title: 'Departure',
         activities: [
-          { time: 'morning', title: 'Magnetic Hill & Confluence', description: 'Visit Magnetic Hill and Indus-Zanskar confluence (blue meets green!)', duration: '3 hrs', cost: { budget: 1000, mid: 1500, premium: 2500 }, transport: 'Taxi', canSkip: true },
-          { time: 'afternoon', title: 'Fly Home', description: 'Transfer to Leh airport. Flight back to Delhi.', duration: '3 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight', mustDo: true, tip: 'Keep buffer for flight delays' },
-          { time: 'evening', title: 'Arrive Delhi', description: 'Land in Delhi. Trip complete!', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
+          { time: 'morning', title: 'Airport Transfer', description: 'Early morning flights are standard.', duration: '1 hrs', cost: { budget: 500, mid: 800, premium: 1000 }, transport: 'Taxi' },
+          { time: 'afternoon', title: 'Fly Out', description: 'Views of snowy Himalayas one last time.', duration: '3 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight' },
+          { time: 'evening', title: 'Home', description: 'Back to sea level!', duration: '0 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
         ]
       }
     ]
@@ -296,7 +295,7 @@ const TransportIcon = ({ type }: { type?: string }) => {
   const t = type.toLowerCase();
   if (t.includes('flight')) return <Plane className="w-3.5 h-3.5" />;
   if (t.includes('train')) return <Train className="w-3.5 h-3.5" />;
-  if (t.includes('taxi') || t.includes('car') || t.includes('suv')) return <Car className="w-3.5 h-3.5" />;
+  if (t.includes('taxi') || t.includes('car') || t.includes('suv') || t.includes('van')) return <Car className="w-3.5 h-3.5" />;
   if (t.includes('boat')) return <Ship className="w-3.5 h-3.5" />;
   return null;
 };
