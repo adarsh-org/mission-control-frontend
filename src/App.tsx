@@ -1,14 +1,19 @@
 import { useCallback, useState } from 'react';
-import { Wifi, WifiOff, Bot, LayoutGrid, MessageSquare } from 'lucide-react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Wifi, WifiOff, Bot, LayoutGrid, MessageSquare, Plane, Home } from 'lucide-react';
 import { AgentsList } from './components/AgentsList';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AgentChat } from './components/AgentChat';
 import { useAgents, useTasks, useMessages, useSSE, transformAgent, transformTask } from './hooks/useApi';
+import TripPlanner from './pages/TripPlanner';
 import type { Agent, Task, Message, TaskStatus } from './types';
 
 type MobileView = 'agents' | 'board' | 'chat';
 
 function Header({ connected }: { connected: boolean }) {
+  const location = useLocation();
+  const isTripPlanner = location.pathname === '/trip-planner';
+
   return (
     <header className="h-14 sm:h-16 px-4 sm:px-6 border-b border-white/5 bg-claw-surface/80 backdrop-blur-md flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -24,25 +29,55 @@ function Header({ connected }: { connected: boolean }) {
           </p>
         </div>
       </div>
-      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
-        connected 
-          ? 'bg-accent-primary/10 border-accent-primary/30' 
-          : 'bg-accent-danger/10 border-accent-danger/30'
-      }`}>
-        {connected ? (
-          <>
-            <Wifi className="w-3.5 h-3.5 text-accent-primary" />
-            <div className="w-2 h-2 rounded-full bg-accent-primary status-pulse" />
-          </>
-        ) : (
-          <>
-            <WifiOff className="w-3.5 h-3.5 text-accent-danger" />
-            <div className="w-2 h-2 rounded-full bg-accent-danger" />
-          </>
-        )}
-        <span className={`text-xs font-medium ${connected ? 'text-accent-primary' : 'text-accent-danger'}`}>
-          {connected ? 'Live' : 'Offline'}
-        </span>
+      
+      <div className="flex items-center gap-4">
+        {/* Nav Links */}
+        <nav className="hidden sm:flex items-center gap-2">
+          <Link
+            to="/"
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              !isTripPlanner 
+                ? 'bg-accent-primary/20 text-accent-primary' 
+                : 'text-accent-muted hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Home className="w-4 h-4" />
+            Dashboard
+          </Link>
+          <Link
+            to="/trip-planner"
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              isTripPlanner 
+                ? 'bg-accent-primary/20 text-accent-primary' 
+                : 'text-accent-muted hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Plane className="w-4 h-4" />
+            Trip Planner
+          </Link>
+        </nav>
+
+        {/* Connection Status */}
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
+          connected 
+            ? 'bg-accent-primary/10 border-accent-primary/30' 
+            : 'bg-accent-danger/10 border-accent-danger/30'
+        }`}>
+          {connected ? (
+            <>
+              <Wifi className="w-3.5 h-3.5 text-accent-primary" />
+              <div className="w-2 h-2 rounded-full bg-accent-primary status-pulse" />
+            </>
+          ) : (
+            <>
+              <WifiOff className="w-3.5 h-3.5 text-accent-danger" />
+              <div className="w-2 h-2 rounded-full bg-accent-danger" />
+            </>
+          )}
+          <span className={`text-xs font-medium ${connected ? 'text-accent-primary' : 'text-accent-danger'}`}>
+            {connected ? 'Live' : 'Offline'}
+          </span>
+        </div>
       </div>
     </header>
   );
@@ -56,6 +91,30 @@ interface MobileNavProps {
 }
 
 function MobileNav({ activeView, onViewChange, agentCount, messageCount }: MobileNavProps) {
+  const location = useLocation();
+  const isTripPlanner = location.pathname === '/trip-planner';
+
+  if (isTripPlanner) {
+    return (
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-claw-surface/95 border-t border-white/5 backdrop-blur-lg z-40 flex items-center justify-around px-4 safe-area-pb">
+        <Link
+          to="/"
+          className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-muted hover:text-gray-300 hover:bg-white/5"
+        >
+          <Home className="w-5 h-5" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
+        </Link>
+        <Link
+          to="/trip-planner"
+          className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-primary bg-accent-primary/10"
+        >
+          <Plane className="w-5 h-5" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider">Trip</span>
+        </Link>
+      </nav>
+    );
+  }
+
   const tabs = [
     { id: 'agents' as MobileView, icon: Bot, label: 'Agents', count: agentCount },
     { id: 'board' as MobileView, icon: LayoutGrid, label: 'Board', count: null },
@@ -93,18 +152,24 @@ function MobileNav({ activeView, onViewChange, agentCount, messageCount }: Mobil
           </button>
         );
       })}
+      <Link
+        to="/trip-planner"
+        className="flex flex-col items-center justify-center gap-1 py-2 px-5 rounded-xl text-accent-muted hover:text-gray-300 hover:bg-white/5"
+      >
+        <Plane className="w-5 h-5" />
+        <span className="text-[10px] font-semibold uppercase tracking-wider">Trip</span>
+      </Link>
     </nav>
   );
 }
 
-export default function App() {
+function Dashboard() {
   const [mobileView, setMobileView] = useState<MobileView>('board');
   const [agentFeedCollapsed, setAgentFeedCollapsed] = useState(false);
   const { agents, setAgents, loading: agentsLoading } = useAgents();
   const { kanban, loading: tasksLoading, moveTask, setTasks } = useTasks();
   const { messages, loading: messagesLoading, addMessage } = useMessages();
 
-  // SSE handlers
   const handleAgentUpdate = useCallback((agent: Agent, _action?: 'created' | 'updated') => {
     setAgents(prev => {
       const idx = prev.findIndex(a => a.id === agent.id);
@@ -156,17 +221,13 @@ export default function App() {
   }, [moveTask]);
 
   return (
-    <div className="h-screen flex flex-col bg-claw-bg text-white overflow-hidden">
-      <Header connected={connected} />
-      
+    <>
       {/* Desktop Layout (md+) */}
       <main className="flex-1 hidden md:flex overflow-hidden">
-        {/* Left Panel - Agents List */}
         <aside className="w-64 lg:w-72 border-r border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden">
           <AgentsList agents={agents} loading={agentsLoading} />
         </aside>
 
-        {/* Main Area - Kanban Board */}
         <section className="flex-1 overflow-hidden bg-claw-bg">
           <KanbanBoard 
             kanban={kanban} 
@@ -176,7 +237,6 @@ export default function App() {
           />
         </section>
 
-        {/* Right Panel - Agent Chat */}
         <aside className={`${agentFeedCollapsed ? 'w-14' : 'w-80 lg:w-96'} border-l border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden transition-all duration-300`}>
           <AgentChat 
             messages={messages} 
@@ -213,6 +273,20 @@ export default function App() {
         agentCount={agents.length}
         messageCount={messages.length}
       />
+    </>
+  );
+}
+
+export default function App() {
+  const { connected } = useSSE(() => {}, () => {}, () => {}, () => {});
+
+  return (
+    <div className="h-screen flex flex-col bg-claw-bg text-white overflow-hidden">
+      <Header connected={connected} />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/trip-planner" element={<TripPlanner />} />
+      </Routes>
     </div>
   );
 }
