@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 
 type PriceTier = 'budget' | 'mid' | 'premium';
 type TimeOfDay = 'morning' | 'afternoon' | 'evening';
+type OriginCity = 'Mumbai' | 'Pune' | 'Indore';
 
 interface Activity {
   time: TimeOfDay;
@@ -27,6 +28,7 @@ interface Activity {
 
 interface DayItinerary {
   day: number;
+  date?: string;
   title: string;
   activities: Activity[];
 }
@@ -40,7 +42,7 @@ interface Destination {
   recommendationText: string;
   weather: { temp: string; condition: string; icon: 'sun' | 'cloud-snow' | 'alert' };
   priceRange: { budget: number; mid: number; premium: number };
-  flightCost: number;
+  flightCosts: { [key in OriginCity]: number };
   stayCost: string;
   duration: string;
   highlights: string[];
@@ -59,7 +61,7 @@ const destinations: Destination[] = [
     recommendationText: 'Perfect for 5 days',
     weather: { temp: '28-32°C', condition: 'Sunny & Warm', icon: 'sun' },
     priceRange: { budget: 25000, mid: 32000, premium: 45000 },
-    flightCost: 10000,
+    flightCosts: { Mumbai: 8000, Pune: 9500, Indore: 13000 },
     stayCost: '₹4K/night/room',
     duration: '5 Days',
     highlights: ['Cliff-top cafes', 'Ayurveda spa', 'Backwaters', 'Pristine beaches'],
@@ -69,7 +71,7 @@ const destinations: Destination[] = [
         day: 1,
         title: 'Arrival & Cliff Sunset',
         activities: [
-          { time: 'morning', title: 'Fly to Trivandrum', description: 'Delhi/Mumbai → Trivandrum (2.5-3 hrs)', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true },
+          { time: 'morning', title: 'Fly to Trivandrum', description: 'Arrival & Transfer (2.5-3 hrs)', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true },
           { time: 'afternoon', title: 'Transfer to Varkala', description: 'Scenic 1-hour drive to Varkala Cliff area. Check into resort.', duration: '2 hrs', cost: { budget: 500, mid: 800, premium: 1500 }, transport: 'Taxi/Cab', tip: 'Book hotel near North Cliff for best views' },
           { time: 'evening', title: 'Varkala Cliff Sunset', description: 'Watch spectacular sunset from the cliff. Explore cliff-top cafes and shops.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 }, mustDo: true, tip: 'Try the fresh seafood at cliff restaurants' }
         ]
@@ -107,7 +109,7 @@ const destinations: Destination[] = [
         activities: [
           { time: 'morning', title: 'Checkout & Kovalam Beach', description: 'Check out, drive to Kovalam (1 hr). Famous lighthouse beach visit.', duration: '3 hrs', cost: { budget: 600, mid: 1000, premium: 1500 }, transport: 'Taxi', tip: 'Climb lighthouse for panoramic views (₹50)' },
           { time: 'afternoon', title: 'Beach Time & Lunch', description: 'Relax at Kovalam. Fresh seafood lunch at German Bakery or local restaurant.', duration: '3 hrs', cost: { budget: 600, mid: 1200, premium: 2000 }, canSkip: true },
-          { time: 'evening', title: 'Fly Home', description: 'Transfer to Trivandrum airport. Evening flight back to Delhi/Mumbai.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true }
+          { time: 'evening', title: 'Fly Home', description: 'Transfer to Trivandrum airport. Evening flight back.', duration: '3 hrs', cost: { budget: 8000, mid: 10000, premium: 15000 }, transport: 'Flight', mustDo: true }
         ]
       }
     ]
@@ -121,7 +123,7 @@ const destinations: Destination[] = [
     recommendationText: 'Rushed for 5 days',
     weather: { temp: '25-30°C', condition: 'Tropical', icon: 'sun' },
     priceRange: { budget: 45000, mid: 52000, premium: 70000 },
-    flightCost: 18000,
+    flightCosts: { Mumbai: 18000, Pune: 22000, Indore: 25000 },
     stayCost: '₹3-5K/night/room',
     duration: '5 Days',
     highlights: ['Nine Arch Bridge', 'Temple of Tooth', 'Whale watching', 'Scenic train'],
@@ -131,7 +133,7 @@ const destinations: Destination[] = [
         day: 1,
         title: 'Colombo Arrival',
         activities: [
-          { time: 'morning', title: 'Fly to Colombo', description: 'Delhi/Mumbai → Colombo (3-4 hrs). Visa on arrival.', duration: '4 hrs', cost: { budget: 15000, mid: 18000, premium: 25000 }, transport: 'Flight', mustDo: true, tip: 'Get Sri Lankan rupees at airport' },
+          { time: 'morning', title: 'Fly to Colombo', description: 'Arrival in Colombo (3-4 hrs). Visa on arrival.', duration: '4 hrs', cost: { budget: 15000, mid: 18000, premium: 25000 }, transport: 'Flight', mustDo: true, tip: 'Get Sri Lankan rupees at airport' },
           { time: 'afternoon', title: 'Galle Face Green', description: 'Explore the famous oceanfront promenade. Street food, kite flying.', duration: '2 hrs', cost: { budget: 500, mid: 1000, premium: 1500 }, tip: 'Try isso wade (prawn fritters)' },
           { time: 'evening', title: 'Gangaramaya Temple', description: 'Visit the beautiful Buddhist temple. Evening prayers are magical.', duration: '2 hrs', cost: { budget: 200, mid: 200, premium: 200 }, mustDo: true }
         ]
@@ -183,7 +185,7 @@ const destinations: Destination[] = [
     recommendationText: 'March: Risky but possible',
     weather: { temp: '-10 to -20°C', condition: 'Extreme Cold', icon: 'cloud-snow' },
     priceRange: { budget: 35000, mid: 45000, premium: 65000 },
-    flightCost: 12000,
+    flightCosts: { Mumbai: 15000, Pune: 18000, Indore: 22000 },
     stayCost: '₹3-6K/night',
     duration: '6 Days',
     highlights: ['Pangong Lake', 'Nubra Valley', 'Monasteries', 'Mountain passes'],
@@ -200,7 +202,7 @@ const destinations: Destination[] = [
         day: 1,
         title: 'Arrival & Acclimatization',
         activities: [
-          { time: 'morning', title: 'Fly to Leh', description: 'Delhi → Leh (1.5 hrs). Book window seat for Himalayan views!', duration: '2 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight', mustDo: true, tip: 'Flights often delayed due to weather' },
+          { time: 'morning', title: 'Fly to Leh', description: 'Arrival in Leh (1.5 hrs). Book window seat for Himalayan views!', duration: '2 hrs', cost: { budget: 10000, mid: 12000, premium: 18000 }, transport: 'Flight', mustDo: true, tip: 'Flights often delayed due to weather' },
           { time: 'afternoon', title: 'Rest & Acclimatize', description: 'Essential rest day. Stay at hotel, drink lots of water, avoid exertion.', duration: '5 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Do NOT skip acclimatization - altitude sickness is real!' },
           { time: 'evening', title: 'Leh Market Walk', description: 'Gentle evening stroll through Leh Main Bazaar. Light dinner.', duration: '2 hrs', cost: { budget: 500, mid: 800, premium: 1500 }, canSkip: true }
         ]
@@ -306,9 +308,10 @@ interface DestinationCardProps {
   onToggle: () => void;
   onCompare: () => void;
   isComparing: boolean;
+  originCity: OriginCity;
 }
 
-function DestinationCard({ destination, priceTier, isExpanded, onToggle, onCompare, isComparing }: DestinationCardProps) {
+function DestinationCard({ destination, priceTier, isExpanded, onToggle, onCompare, isComparing, originCity }: DestinationCardProps) {
   const isUnavailable = destination.recommendation === 'unavailable';
   
   return (
@@ -367,7 +370,7 @@ function DestinationCard({ destination, priceTier, isExpanded, onToggle, onCompa
           </div>
           <div className="bg-white/5 rounded-lg p-2">
             <Plane className="w-4 h-4 mx-auto text-accent-secondary mb-1" />
-            <p className="text-xs font-medium text-white">₹{(destination.flightCost/1000).toFixed(0)}K RT</p>
+            <p className="text-xs font-medium text-white">₹{(destination.flightCosts[originCity]/1000).toFixed(1)}K</p>
           </div>
           <div className="bg-white/5 rounded-lg p-2">
             <Users className="w-4 h-4 mx-auto text-accent-secondary mb-1" />
@@ -415,18 +418,25 @@ function DestinationCard({ destination, priceTier, isExpanded, onToggle, onCompa
   );
 }
 
-function ExpandedItinerary({ destination, priceTier, withMotorcycle = false }: { destination: Destination; priceTier: PriceTier; withMotorcycle?: boolean }) {
+function ExpandedItinerary({ destination, priceTier, withMotorcycle = false, originCity }: { destination: Destination; priceTier: PriceTier; withMotorcycle?: boolean; originCity: OriginCity }) {
   const isLadakh = destination.id === 'ladakh';
   
+  // Start date: March 21st, 2026
+  const getDayDate = (dayNum: number) => {
+    const date = new Date(2026, 2, 21); // March is month 2 (0-indexed)
+    date.setDate(date.getDate() + (dayNum - 1));
+    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3 }}
-      className="col-span-full overflow-hidden"
+      className="w-full bg-claw-surface/30 border-t border-b border-white/5 mt-4"
     >
-      <div className="pt-4 pb-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {isLadakh && (
           <div className="mb-6 bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-3">
             <Mountain className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" />
@@ -438,75 +448,100 @@ function ExpandedItinerary({ destination, priceTier, withMotorcycle = false }: {
           </div>
         )}
         
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-accent-primary/20 flex items-center justify-center">
-            <MapPin className="w-5 h-5 text-accent-primary" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white">{destination.name} Itinerary</h3>
-            <p className="text-sm text-accent-muted">{destination.duration} • {destination.itinerary.length} Days Planned</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-accent-primary/20 flex items-center justify-center">
+              <MapPin className="w-6 h-6 text-accent-primary" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-white">{destination.name} Itinerary</h3>
+              <p className="text-sm text-accent-muted">{destination.duration} • {destination.itinerary.length} Days • From {originCity}</p>
+            </div>
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {destination.itinerary.map((day) => (
-            <Card key={day.day} className="bg-claw-surface/50 border-white/5">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-accent-primary/20 flex items-center justify-center text-accent-primary text-sm font-bold">
-                    {day.day}
+            <Card key={day.day} className="bg-claw-surface/50 border-white/5 h-full">
+              <CardHeader className="pb-2 border-b border-white/5">
+                <CardTitle className="text-base font-semibold text-white flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-accent-primary/20 flex items-center justify-center text-accent-primary text-sm font-bold">
+                      {day.day}
+                    </span>
+                    <span>{day.title}</span>
+                  </div>
+                  <span className="text-xs font-normal text-accent-muted bg-white/5 px-2 py-1 rounded">
+                    {getDayDate(day.day)}
                   </span>
-                  {day.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {day.activities.map((activity, idx) => (
-                  <div key={idx} className="bg-white/5 rounded-lg p-3 border-l-2 border-accent-primary/30">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <TimeIcon time={activity.time} />
-                          <h4 className="font-medium text-white text-sm truncate">{activity.title}</h4>
-                          {activity.mustDo && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px] px-1.5 flex-shrink-0">
-                              Must Do
-                            </Badge>
-                          )}
-                          {activity.canSkip && (
-                            <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-[10px] px-1.5 flex-shrink-0">
-                              Can Skip
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-xs text-accent-muted mb-2 line-clamp-2">{activity.description}</p>
-                        
-                        <div className="flex flex-wrap items-center gap-3 text-[10px]">
-                          <span className="flex items-center gap-1 text-accent-secondary">
-                            <Clock className="w-3 h-3" />
-                            {activity.duration}
-                          </span>
-                          {activity.transport && (
-                            <span className="flex items-center gap-1 text-accent-secondary">
-                              <TransportIcon type={activity.transport} />
-                              {activity.transport}
-                            </span>
-                          )}
-                          <span className="flex items-center gap-1 text-accent-primary font-semibold">
-                            <IndianRupee className="w-3 h-3" />
-                            {activity.cost[priceTier].toLocaleString()}
-                          </span>
-                        </div>
-                        
-                        {activity.tip && (
-                          <div className="mt-2 flex items-start gap-1.5 bg-amber-500/10 rounded px-2 py-1">
-                            <Info className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
-                            <span className="text-[10px] text-amber-300">{activity.tip}</span>
+              <CardContent className="space-y-4 pt-4">
+                {day.activities.map((activity, idx) => {
+                  // Adjust costs for motorcycle toggle in Ladakh
+                  let displayCost = activity.cost[priceTier];
+                  let displayTransport = activity.transport;
+                  
+                  if (isLadakh && withMotorcycle && activity.transport && 
+                     (activity.transport.includes('Taxi') || activity.transport.includes('Car'))) {
+                      displayTransport = 'Motorcycle';
+                      // Motorcycle might be cheaper than Taxi per person if sharing, but fuel is extra.
+                      // Let's assume renting 3 bikes for 6 people. 
+                      // Rent ~1500/day. Fuel ~500/day. Total 2000/day per bike.
+                      // 3 bikes = 6000/day. Per person = 1000/day.
+                      // Taxi for 6 (Innova) ~5000-8000/day. Per person ~1000-1300.
+                      // Costs are similar, maybe slightly cheaper or same.
+                      // Let's just adjust the text for now.
+                  }
+
+                  return (
+                    <div key={idx} className="bg-white/5 rounded-lg p-3 border-l-2 border-accent-primary/30 hover:bg-white/10 transition-colors">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <TimeIcon time={activity.time} />
+                            <h4 className="font-medium text-white text-sm truncate">{activity.title}</h4>
+                            {activity.mustDo && (
+                              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px] px-1.5 flex-shrink-0">
+                                Must Do
+                              </Badge>
+                            )}
+                            {activity.canSkip && (
+                              <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30 text-[10px] px-1.5 flex-shrink-0">
+                                Can Skip
+                              </Badge>
+                            )}
                           </div>
-                        )}
+                          <p className="text-xs text-accent-muted mb-2 line-clamp-3">{activity.description}</p>
+                          
+                          <div className="flex flex-wrap items-center gap-3 text-[10px]">
+                            <span className="flex items-center gap-1 text-accent-secondary">
+                              <Clock className="w-3 h-3" />
+                              {activity.duration}
+                            </span>
+                            {displayTransport && (
+                              <span className="flex items-center gap-1 text-accent-secondary">
+                                <TransportIcon type={displayTransport} />
+                                {displayTransport}
+                              </span>
+                            )}
+                            <span className="flex items-center gap-1 text-accent-primary font-semibold">
+                              <IndianRupee className="w-3 h-3" />
+                              {displayCost.toLocaleString()}
+                            </span>
+                          </div>
+                          
+                          {activity.tip && (
+                            <div className="mt-2 flex items-start gap-1.5 bg-amber-500/10 rounded px-2 py-1">
+                              <Info className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
+                              <span className="text-[10px] text-amber-300 italic">{activity.tip}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </CardContent>
             </Card>
           ))}
@@ -516,7 +551,7 @@ function ExpandedItinerary({ destination, priceTier, withMotorcycle = false }: {
   );
 }
 
-function CompareModal({ destinations: dests, priceTier, onClose }: { destinations: Destination[]; priceTier: PriceTier; onClose: () => void; }) {
+function CompareModal({ destinations: dests, priceTier, onClose, originCity }: { destinations: Destination[]; priceTier: PriceTier; onClose: () => void; originCity: OriginCity }) {
   if (dests.length < 2) return null;
   return (
     <motion.div
@@ -533,7 +568,7 @@ function CompareModal({ destinations: dests, priceTier, onClose }: { destination
         className="bg-claw-surface border border-white/10 rounded-xl max-w-4xl w-full max-h-[80vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-claw-surface border-b border-white/10 p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-claw-surface border-b border-white/10 p-4 flex items-center justify-between z-10">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-accent-primary" />
             Comparison
@@ -554,12 +589,12 @@ function CompareModal({ destinations: dests, priceTier, onClose }: { destination
                 {dests.map(d => (<td key={d.id} className="py-3 px-2 text-center"><RecommendationBadge type={d.recommendation} /></td>))}
               </tr>
               <tr className="border-b border-white/5">
-                <td className="py-3 px-2 text-accent-muted">Total Cost</td>
+                <td className="py-3 px-2 text-accent-muted">Total Cost (approx)</td>
                 {dests.map(d => (<td key={d.id} className="py-3 px-2 text-center text-accent-primary font-semibold">₹{(d.priceRange[priceTier]/1000).toFixed(0)}K/person</td>))}
               </tr>
               <tr className="border-b border-white/5">
-                <td className="py-3 px-2 text-accent-muted">Flight Cost</td>
-                {dests.map(d => (<td key={d.id} className="py-3 px-2 text-center text-white">₹{(d.flightCost/1000).toFixed(0)}K RT</td>))}
+                <td className="py-3 px-2 text-accent-muted">Flight from {originCity}</td>
+                {dests.map(d => (<td key={d.id} className="py-3 px-2 text-center text-white">₹{(d.flightCosts[originCity]/1000).toFixed(1)}K RT</td>))}
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-2 text-accent-muted">Duration</td>
@@ -587,6 +622,7 @@ function CompareModal({ destinations: dests, priceTier, onClose }: { destination
 
 export default function TripPlanner() {
   const [priceTier, setPriceTier] = useState<PriceTier>('mid');
+  const [originCity, setOriginCity] = useState<OriginCity>('Mumbai');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
@@ -598,19 +634,35 @@ export default function TripPlanner() {
   const expandedDestination = destinations.find(d => d.id === expandedId);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-claw-bg">
+    <div className="flex-1 overflow-y-auto bg-claw-bg relative">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-claw-surface/95 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4 w-full md:w-auto">
               <Link to="/"><Button variant="ghost" size="sm" className="text-accent-muted hover:text-white"><ArrowLeft className="w-4 h-4 mr-2" />Back</Button></Link>
               <div>
                 <h1 className="text-xl font-bold text-white flex items-center gap-2"><Plane className="w-5 h-5 text-accent-primary" />Trip Planner</h1>
-                <p className="text-xs text-accent-muted">5-6 Day Trip • 6 People • 3 Couples</p>
+                <p className="text-xs text-accent-muted">Mar 21, 2026 • 6 People • 3 Couples</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+              {/* Origin City Selector */}
+              <div className="relative">
+                 <select 
+                   value={originCity}
+                   onChange={(e) => setOriginCity(e.target.value as OriginCity)}
+                   className="appearance-none bg-white/5 border border-white/10 text-white text-sm rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent-primary"
+                 >
+                   <option value="Mumbai">From Mumbai</option>
+                   <option value="Pune">From Pune</option>
+                   <option value="Indore">From Indore</option>
+                 </select>
+                 <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-accent-muted pointer-events-none" />
+              </div>
+
+              {/* Price Tier Toggle */}
               <div className="flex bg-white/5 rounded-lg p-1">
                 {(['budget', 'mid', 'premium'] as PriceTier[]).map((tier) => (
                   <button key={tier} onClick={() => setPriceTier(tier)} className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${priceTier === tier ? 'bg-accent-primary text-white' : 'text-accent-muted hover:text-white'}`}>
@@ -618,6 +670,7 @@ export default function TripPlanner() {
                   </button>
                 ))}
               </div>
+              
               {compareIds.length >= 2 && (
                 <Button onClick={() => setShowCompare(true)} className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30">
                   <Sparkles className="w-4 h-4 mr-2" />Compare ({compareIds.length})
@@ -629,16 +682,16 @@ export default function TripPlanner() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8 pb-32">
         <div className="mb-8 bg-gradient-to-r from-accent-primary/10 to-cyan-500/10 border border-accent-primary/20 rounded-xl p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-white mb-1">March Trip Planning</h2>
-              <p className="text-sm text-accent-muted">Saturday to Sunday • 5-6 days • Budget: ₹30-55K per person</p>
+              <h2 className="text-lg font-semibold text-white mb-1">March 2026 Trip Options</h2>
+              <p className="text-sm text-accent-muted">Starts March 21st • 5-6 Days • {originCity} Departure</p>
             </div>
             <div className="flex items-center gap-6 text-sm flex-wrap">
               <div className="flex items-center gap-2"><Users className="w-4 h-4 text-accent-primary" /><span className="text-white">6 Travelers</span></div>
-              <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-accent-primary" /><span className="text-white">5-6 Days</span></div>
+              <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-accent-primary" /><span className="text-white">Mar 21 - Mar 26</span></div>
               <div className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-400" /><span className="text-white">Varkala Recommended</span></div>
             </div>
           </div>
@@ -655,36 +708,54 @@ export default function TripPlanner() {
               onToggle={() => toggleExpand(destination.id)}
               onCompare={() => toggleCompare(destination.id)}
               isComparing={compareIds.includes(destination.id)}
+              originCity={originCity}
             />
           ))}
         </div>
 
-        {/* Expanded Itinerary - Full Width */}
+        {/* Full Width Expanded Itinerary Section */}
+        {/* We render this OUTSIDE the grid so it takes full width naturally */}
         <AnimatePresence>
           {expandedDestination && (
-            <div className="mt-6">
+            <div className="mt-8 relative z-10">
+              <div className="absolute inset-0 bg-claw-bg/80 backdrop-blur-sm -z-10" onClick={() => setExpandedId(null)} />
+              
               {expandedDestination.id === 'ladakh' && (
-                <div className="mb-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between flex-wrap gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">🏍️</span>
-                    <div>
-                      <p className="text-amber-400 font-medium">Motorcycle Rental (Optional)</p>
-                      <p className="text-xs text-amber-300/70">Add Royal Enfield adventure to your Ladakh trip</p>
+                <div className="max-w-7xl mx-auto px-4 mb-4">
+                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between flex-wrap gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🏍️</span>
+                      <div>
+                        <p className="text-amber-400 font-medium">Motorcycle Rental (Optional)</p>
+                        <p className="text-xs text-amber-300/70">Add Royal Enfield adventure to your Ladakh trip</p>
+                      </div>
                     </div>
+                    <button
+                      onClick={() => setWithMotorcycle(!withMotorcycle)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        withMotorcycle 
+                          ? 'bg-amber-500 text-black' 
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      {withMotorcycle ? '✓ With Motorcycle' : 'Without Motorcycle'}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setWithMotorcycle(!withMotorcycle)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      withMotorcycle 
-                        ? 'bg-amber-500 text-black' 
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
-                  >
-                    {withMotorcycle ? '✓ With Motorcycle' : 'Without Motorcycle'}
-                  </button>
                 </div>
               )}
-              <ExpandedItinerary destination={expandedDestination} priceTier={priceTier} withMotorcycle={withMotorcycle} />
+              
+              <ExpandedItinerary 
+                destination={expandedDestination} 
+                priceTier={priceTier} 
+                withMotorcycle={withMotorcycle}
+                originCity={originCity}
+              />
+              
+              <div className="flex justify-center mt-6">
+                 <Button onClick={() => setExpandedId(null)} variant="outline" className="border-white/10 hover:bg-white/5">
+                    Close Itinerary <ChevronUp className="w-4 h-4 ml-2" />
+                 </Button>
+              </div>
             </div>
           )}
         </AnimatePresence>
@@ -698,7 +769,7 @@ export default function TripPlanner() {
         </div>
       </main>
 
-      <AnimatePresence>{showCompare && <CompareModal destinations={compareDestinations} priceTier={priceTier} onClose={() => setShowCompare(false)} />}</AnimatePresence>
+      <AnimatePresence>{showCompare && <CompareModal destinations={compareDestinations} priceTier={priceTier} onClose={() => setShowCompare(false)} originCity={originCity} />}</AnimatePresence>
     </div>
   );
 }
