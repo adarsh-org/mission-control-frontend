@@ -177,6 +177,83 @@ const destinations: Destination[] = [
     ]
   },
   {
+    id: 'oman',
+    name: 'Oman',
+    country: 'Middle East',
+    heroImage: 'https://images.unsplash.com/photo-1518558997970-4ddc236affd2?w=800&q=80',
+    recommendation: 'recommended',
+    recommendationText: 'Adventure & Luxury',
+    weather: { temp: '25-30°C', condition: 'Sunny & Dry', icon: 'sun' },
+    priceRange: { budget: 50000, mid: 70000, premium: 100000 },
+    flightCosts: { Mumbai: 16000, Pune: 24000, Indore: 28000 },
+    stayCost: '₹5-10K/night',
+    duration: '6 Days',
+    highlights: ['Wadi Shab', 'Wahiba Sands', 'Nizwa Fort', 'Jebel Shams'],
+    seasonInfo: 'Best: Oct-Mar',
+    notes: [
+      '🚙 4x4 Rental Essential (~₹5k/day)',
+      '⛺ Desert Camping is a MUST',
+      '🏊‍♂️ Wadis are perfect for swimming',
+      'Visa: eVisa required (Easy)'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival & Muscat',
+        activities: [
+          { time: 'morning', title: 'Fly to Muscat (MCT)', description: 'Direct from Mumbai/Delhi. Pick up 4x4 rental at airport.', duration: '3 hrs', cost: { budget: 16000, mid: 20000, premium: 30000 }, transport: 'Flight', mustDo: true },
+          { time: 'afternoon', title: 'Mutrah Souq & Corniche', description: 'Explore the traditional market. Buy frankincense. Walk the corniche.', duration: '3 hrs', cost: { budget: 500, mid: 1000, premium: 2000 } },
+          { time: 'evening', title: 'Sultan Qaboos Mosque', description: 'View from outside (open morning only for tourists) or dinner at Kargeen.', duration: '2 hrs', cost: { budget: 1000, mid: 2000, premium: 4000 }, mustDo: true }
+        ]
+      },
+      {
+        day: 2,
+        title: 'Bimmah Sinkhole & Wadi Shab',
+        activities: [
+          { time: 'morning', title: 'Bimmah Sinkhole', description: 'Drive south (1.5 hrs). Swim in the turquoise sinkhole.', duration: '1 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: '4x4' },
+          { time: 'afternoon', title: 'Wadi Shab Hike & Swim', description: 'Boat across river -> Hike 45 mins -> Swim through caves to hidden waterfall.', duration: '4 hrs', cost: { budget: 100, mid: 100, premium: 100 }, mustDo: true, tip: 'Water shoes essential!' },
+          { time: 'evening', title: 'Drive to Sur/Ras Al Jinz', description: 'Stay in Sur or Turtle Reserve.', duration: '2 hrs', cost: { budget: 3000, mid: 5000, premium: 8000 } }
+        ]
+      },
+      {
+        day: 3,
+        title: 'Wadi Bani Khalid & Desert',
+        activities: [
+          { time: 'morning', title: 'Wadi Bani Khalid', description: 'Emerald pools in the desert. Easy swimming, no hiking needed.', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true },
+          { time: 'afternoon', title: 'Enter Wahiba Sands', description: 'Deflate tires! Drive into the dunes for 40km to your camp.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: '4x4', mustDo: true },
+          { time: 'evening', title: 'Desert Sunset & Camping', description: 'Sunset on dunes. BBQ dinner under stars. Stay at Thousand Nights or Desert Nights.', duration: '12 hrs', cost: { budget: 5000, mid: 10000, premium: 20000 }, mustDo: true }
+        ]
+      },
+      {
+        day: 4,
+        title: 'Nizwa & History',
+        activities: [
+          { time: 'morning', title: 'Drive to Nizwa', description: 'Exit desert, drive to the ancient capital (2.5 hrs).', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: '4x4' },
+          { time: 'afternoon', title: 'Nizwa Fort & Souq', description: 'Explore the massive circular fort. Buy Omani dates and pottery.', duration: '2 hrs', cost: { budget: 1000, mid: 1000, premium: 1000 }, mustDo: true },
+          { time: 'evening', title: 'Misfat Al Abriyeen', description: 'Visit the mud-brick village built into the mountain.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, canSkip: true }
+        ]
+      },
+      {
+        day: 5,
+        title: 'Grand Canyon (Jebel Shams)',
+        activities: [
+          { time: 'morning', title: 'Drive up Jebel Shams', description: 'Off-road drive to Oman\'s highest mountain.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, transport: '4x4' },
+          { time: 'afternoon', title: 'Balcony Walk', description: 'Spectacular rim walk overlooking the "Grand Canyon of Arabia".', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true },
+          { time: 'evening', title: 'Return to Muscat', description: 'Drive back to Muscat (3 hrs). Farewell dinner.', duration: '3 hrs', cost: { budget: 1500, mid: 3000, premium: 5000 } }
+        ]
+      },
+      {
+        day: 6,
+        title: 'Departure',
+        activities: [
+          { time: 'morning', title: 'Sultan Qaboos Grand Mosque', description: 'Visit inside (8-11 AM only). Stunning chandelier and carpet.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 }, mustDo: true, tip: 'Strict dress code' },
+          { time: 'afternoon', title: 'Opera House & Beach', description: 'Quick photo stop at Royal Opera House. Lunch at Qurum Beach.', duration: '2 hrs', cost: { budget: 1000, mid: 2000, premium: 3000 } },
+          { time: 'evening', title: 'Fly Home', description: 'Drop rental car. Flight back.', duration: '3 hrs', cost: { budget: 16000, mid: 20000, premium: 30000 }, transport: 'Flight' }
+        ]
+      }
+    ]
+  },
+  {
     id: 'ladakh',
     name: 'Ladakh',
     country: 'India',
