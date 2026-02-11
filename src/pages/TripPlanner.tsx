@@ -185,7 +185,7 @@ const destinations: Destination[] = [
     recommendationText: 'Adventure & Luxury',
     weather: { temp: '25-30°C', condition: 'Sunny & Dry', icon: 'sun' },
     priceRange: { budget: 50000, mid: 70000, premium: 100000 },
-    flightCosts: { Mumbai: 16000, Pune: 24000, Indore: 28000 },
+    flightCosts: { Mumbai: 16000, Pune: 19500, Indore: 20000 },
     stayCost: '₹5-10K/night',
     duration: '6 Days',
     highlights: ['Wadi Shab', 'Wahiba Sands', 'Nizwa Fort', 'Jebel Shams'],
