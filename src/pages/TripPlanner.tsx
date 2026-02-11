@@ -254,6 +254,74 @@ const destinations: Destination[] = [
     ]
   },
   {
+    id: 'lakshadweep',
+    name: 'Lakshadweep',
+    country: 'India',
+    heroImage: 'https://images.unsplash.com/photo-1590664095641-7fa05f68a8ce?w=800&q=80',
+    recommendation: 'rushed',
+    recommendationText: 'Premium & Secluded',
+    weather: { temp: '27-32°C', condition: 'Tropical Paradise', icon: 'sun' },
+    priceRange: { budget: 60000, mid: 80000, premium: 120000 },
+    flightCosts: { Mumbai: 25000, Pune: 30000, Indore: 35000 },
+    stayCost: '₹8-15K/night',
+    duration: '5 Days',
+    highlights: ['Agatti Coral Reefs', 'Bangaram Island', 'Scuba Diving', 'Glass Bottom Boat'],
+    seasonInfo: 'Best: Oct-May',
+    notes: [
+      '🎫 Permit Required (Apply 1 month ahead)',
+      '✈️ Flights via Kochi/Bengaluru only (Alliance Air)',
+      '🚫 Alcohol prohibited on inhabited islands (except Bangaram)',
+      '🏝️ Pure detox - weak internet'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival in Agatti',
+        activities: [
+          { time: 'morning', title: 'Fly to Agatti (AGX)', description: 'Landing on the narrow airstrip surrounded by turquoise water. Surreal!', duration: '4 hrs', cost: { budget: 25000, mid: 25000, premium: 35000 }, transport: 'Flight', mustDo: true },
+          { time: 'afternoon', title: 'Check-in & Lagoon View', description: 'Stay at Agatti Island Beach Resort. Relax by the lagoon.', duration: '3 hrs', cost: { budget: 0, mid: 0, premium: 0 } },
+          { time: 'evening', title: 'Lagoon Sunset Walk', description: 'Walk on the pristine white sands. Watch the sun dip into the Laccadive Sea.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
+        ]
+      },
+      {
+        day: 2,
+        title: 'Bangaram Island Day Trip',
+        activities: [
+          { time: 'morning', title: 'Boat to Bangaram', description: 'Speedboat to the uninhabited paradise island (45 mins).', duration: '1 hrs', cost: { budget: 2000, mid: 3000, premium: 5000 }, transport: 'Speedboat', mustDo: true },
+          { time: 'afternoon', title: 'Shipwreck Snorkeling', description: 'Snorkel around the famous shipwreck. Incredible coral life.', duration: '3 hrs', cost: { budget: 1000, mid: 1500, premium: 2000 }, mustDo: true },
+          { time: 'evening', title: 'Thinnakara Sunset', description: 'Visit the nearby Thinnakara island for tea and sunset before returning.', duration: '2 hrs', cost: { budget: 500, mid: 1000, premium: 1500 } }
+        ]
+      },
+      {
+        day: 3,
+        title: 'Scuba & Water Sports',
+        activities: [
+          { time: 'morning', title: 'Scuba Diving', description: 'Discover the vibrant marine life. Beginners can do Discovery Scuba Dive.', duration: '3 hrs', cost: { budget: 4000, mid: 5000, premium: 7000 }, mustDo: true, tip: 'Best visibility in India' },
+          { time: 'afternoon', title: 'Glass Bottom Boat', description: 'View corals without getting wet. Great for non-swimmers.', duration: '1 hrs', cost: { budget: 500, mid: 800, premium: 1200 } },
+          { time: 'evening', title: 'Beach Dinner', description: 'Quiet dinner at the resort. Fresh tuna specialties.', duration: '2 hrs', cost: { budget: 800, mid: 1500, premium: 2500 } }
+        ]
+      },
+      {
+        day: 4,
+        title: 'Kalpitty & Kayaking',
+        activities: [
+          { time: 'morning', title: 'Kayaking in Lagoon', description: 'Paddle through the calm, shallow waters.', duration: '2 hrs', cost: { budget: 500, mid: 800, premium: 1200 } },
+          { time: 'afternoon', title: 'Kalpitty Island Visit', description: 'Short boat ride to this tiny uninhabited islet. Great for privacy.', duration: '3 hrs', cost: { budget: 1000, mid: 1500, premium: 2500 } },
+          { time: 'evening', title: 'Stargazing', description: 'Zero light pollution. Milky Way visibility is high.', duration: '2 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
+        ]
+      },
+      {
+        day: 5,
+        title: 'Departure',
+        activities: [
+          { time: 'morning', title: 'Souvenir Shopping', description: 'Buy coconut shell crafts or local tuna pickle.', duration: '1 hrs', cost: { budget: 500, mid: 1000, premium: 2000 } },
+          { time: 'afternoon', title: 'Fly Home', description: 'Take the flight back to Kochi/Bangalore.', duration: '3 hrs', cost: { budget: 25000, mid: 25000, premium: 35000 }, transport: 'Flight', mustDo: true },
+          { time: 'evening', title: 'Arrival', description: 'Back to mainland India.', duration: '0 hrs', cost: { budget: 0, mid: 0, premium: 0 } }
+        ]
+      }
+    ]
+  },
+  {
     id: 'ladakh',
     name: 'Ladakh',
     country: 'India',
