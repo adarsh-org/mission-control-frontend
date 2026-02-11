@@ -180,7 +180,7 @@ const destinations: Destination[] = [
     id: 'oman',
     name: 'Oman',
     country: 'Middle East',
-    heroImage: 'https://images.unsplash.com/photo-1518558997970-4ddc236affd2?w=800&q=80',
+    heroImage: 'https://images.unsplash.com/photo-1590076215667-273397949021?w=800&q=80',
     recommendation: 'recommended',
     recommendationText: 'Adventure & Luxury',
     weather: { temp: '25-30°C', condition: 'Sunny & Dry', icon: 'sun' },
