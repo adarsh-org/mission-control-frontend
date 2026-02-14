@@ -1,5 +1,6 @@
-import { Bot, Circle } from 'lucide-react';
+import { Circle } from 'lucide-react';
 import type { Agent, AgentStatus } from '../types';
+import { AgentAvatar } from './AgentAvatar';
 
 interface AgentsListProps {
   agents: Agent[];
@@ -65,12 +66,12 @@ function AgentCard({ agent }: { agent: Agent }) {
           border border-white/10
           flex items-center justify-center flex-shrink-0 
           group-hover:border-accent-primary/30 group-hover:shadow-glow-sm
-          transition-all duration-200
+          transition-all duration-200 overflow-hidden
         `}>
           {agent.avatar ? (
             <img src={agent.avatar} alt={agent.name} className="w-full h-full rounded-xl object-cover" />
           ) : (
-            <Bot className="w-6 h-6 text-accent-primary" />
+            <AgentAvatar name={agent.name} size={40} />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -112,8 +113,8 @@ export function AgentsList({ agents, loading }: AgentsListProps) {
       <div className="h-full flex flex-col">
         <div className="p-4 border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-accent-primary/10 flex items-center justify-center">
-              <Bot className="w-4 h-4 text-accent-primary" />
+            <div className="w-8 h-8 rounded-lg bg-accent-primary/10 flex items-center justify-center overflow-hidden">
+              <AgentAvatar name="Agents" size={28} enableBlink={false} />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-white">Agents</h2>
@@ -135,8 +136,8 @@ export function AgentsList({ agents, loading }: AgentsListProps) {
       <div className="p-4 border-b border-white/5 bg-claw-surface/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center">
-              <Bot className="w-4 h-4 text-accent-primary" />
+            <div className="w-8 h-8 rounded-lg bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center overflow-hidden">
+              <AgentAvatar name="Agents" size={28} enableBlink={false} />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-white">Agents</h2>
@@ -152,8 +153,8 @@ export function AgentsList({ agents, loading }: AgentsListProps) {
       <div className="flex-1 overflow-y-auto p-3">
         {agents.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="w-12 h-12 rounded-xl bg-accent-muted/10 flex items-center justify-center mb-3">
-              <Bot className="w-6 h-6 text-accent-muted" />
+            <div className="w-12 h-12 rounded-xl bg-accent-muted/10 flex items-center justify-center mb-3 overflow-hidden">
+              <AgentAvatar name="Empty" size={40} enableBlink={false} />
             </div>
             <p className="text-sm text-accent-muted">No agents connected</p>
             <p className="text-xs text-accent-muted/60 mt-1">Agents will appear here when online</p>

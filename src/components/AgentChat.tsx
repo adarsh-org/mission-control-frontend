@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MessageSquare, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Message } from '../types';
+import { AgentAvatar } from './AgentAvatar';
 
 interface AgentChatProps {
   messages: Message[];
@@ -105,7 +106,6 @@ function getAgentInitial(name: string): string {
 
 function ChatBubble({ message }: { message: Message }) {
   const colors = getAgentColor(message.agentId);
-  const initial = getAgentInitial(message.agentName);
   
   return (
     <div className="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -116,10 +116,9 @@ function ChatBubble({ message }: { message: Message }) {
         flex items-center justify-center
         shadow-lg shadow-black/20
         ring-2 ring-white/10
+        overflow-hidden
       `}>
-        <span className="text-white font-bold text-sm drop-shadow-md">
-          {initial}
-        </span>
+        <AgentAvatar name={message.agentName} size={40} />
       </div>
       
       {/* Message Content */}
@@ -188,18 +187,27 @@ function MessageSkeleton() {
 export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: AgentChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
-  // Auto-scroll to bottom on new messages
+  // Detect scroll position
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+    setShowScrollButton(distanceFromBottom > 100);
+  };
+
+  // Scroll to bottom
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Auto-scroll on new messages (only if near bottom)
   useEffect(() => {
-    if (scrollRef.current && containerRef.current) {
-      const container = containerRef.current;
-      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
-      
-      if (isNearBottom) {
-        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
+    if (!showScrollButton) {
+      scrollToBottom();
     }
-  }, [messages]);
+  }, [messages.length]);
 
   // Collapsed view - thin bar with icon
   if (collapsed) {
@@ -278,7 +286,7 @@ export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: Ag
       </div>
       
       {/* Messages Container */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+      <div ref={containerRef} onScroll={handleScroll} className="relative flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         {messages.length === 0 ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center py-12 px-4">
@@ -298,6 +306,17 @@ export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: Ag
             ))}
             <div ref={scrollRef} className="h-4" />
           </div>
+        )}
+        
+        {/* Floating scroll-to-bottom button */}
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-accent-secondary flex items-center justify-center shadow-lg hover:bg-accent-secondary/80 transition-all duration-200 hover:scale-105 z-10"
+            title="Jump to latest"
+          >
+            <ChevronDown className="w-5 h-5 text-white" />
+          </button>
         )}
       </div>
     </div>
