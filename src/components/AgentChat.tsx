@@ -100,10 +100,6 @@ function getAgentColor(agentId: string) {
   return agentColors[agentId] || defaultColor;
 }
 
-function getAgentInitial(name: string): string {
-  return name.charAt(0).toUpperCase();
-}
-
 function ChatBubble({ message }: { message: Message }) {
   const colors = getAgentColor(message.agentId);
   
