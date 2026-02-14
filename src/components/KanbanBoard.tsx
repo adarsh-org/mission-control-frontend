@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -19,6 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Bot, Play } from 'lucide-react';
 import type { Task, KanbanData, TaskStatus, Agent } from '../types';
+import { TaskDetailModal } from './TaskDetailModal';
 
 // Helper to format relative time
 function getRelativeTime(dateString?: string): string {
@@ -98,15 +99,17 @@ interface TaskCardProps {
   task: Task;
   agents: Agent[];
   isDragging?: boolean;
+  onClick?: () => void;
 }
 
-function TaskCard({ task, agents, isDragging }: TaskCardProps) {
+function TaskCard({ task, agents, isDragging, onClick }: TaskCardProps) {
   const agent = agents.find(a => a.id === task.agentId);
   const statusStyle = statusColors[task.status];
   const relativeTime = getRelativeTime(task.updatedAt || task.createdAt);
   
   return (
     <div 
+      onClick={onClick}
       className={`
         group relative p-3.5 rounded-xl border border-white/5 
         bg-gradient-to-br from-claw-card to-claw-surface
@@ -114,7 +117,7 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
         border-l-[3px] ${statusStyle.border} touch-manipulation
         ${isDragging 
           ? 'shadow-lg shadow-accent-primary/20 scale-[1.02] border-accent-primary/30' 
-          : `hover:border-white/10 ${statusStyle.glow} active:scale-[0.98]`
+          : `hover:border-white/10 ${statusStyle.glow} active:scale-[0.98] cursor-pointer`
         }
       `}
     >
@@ -175,9 +178,12 @@ function TaskCard({ task, agents, isDragging }: TaskCardProps) {
 interface SortableTaskProps {
   task: Task;
   agents: Agent[];
+  onTaskClick?: (task: Task) => void;
 }
 
-function SortableTask({ task, agents }: SortableTaskProps) {
+function SortableTask({ task, agents, onTaskClick }: SortableTaskProps) {
+  const hasDragged = useRef(false);
+  
   const {
     attributes,
     listeners,
@@ -193,9 +199,32 @@ function SortableTask({ task, agents }: SortableTaskProps) {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Track if we're dragging to prevent click on drop
+  const handlePointerDown = () => {
+    hasDragged.current = false;
+  };
+  
+  const handlePointerMove = () => {
+    hasDragged.current = true;
+  };
+
+  const handleClick = () => {
+    // Only trigger click if we didn't drag
+    if (!hasDragged.current && onTaskClick) {
+      onTaskClick(task);
+    }
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <TaskCard task={task} agents={agents} />
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+    >
+      <TaskCard task={task} agents={agents} onClick={handleClick} />
     </div>
   );
 }
@@ -204,9 +233,10 @@ interface KanbanColumnProps {
   status: TaskStatus;
   tasks: Task[];
   agents: Agent[];
+  onTaskClick?: (task: Task) => void;
 }
 
-function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
+function KanbanColumn({ status, tasks, agents, onTaskClick }: KanbanColumnProps) {
   const config = columnConfig[status];
   const Icon = config.icon;
   
@@ -236,7 +266,7 @@ function KanbanColumn({ status, tasks, agents }: KanbanColumnProps) {
       <div className="flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px]">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map(task => (
-            <SortableTask key={task.id} task={task} agents={agents} />
+            <SortableTask key={task.id} task={task} agents={agents} onTaskClick={onTaskClick} />
           ))}
         </SortableContext>
         {tasks.length === 0 && (
@@ -272,6 +302,13 @@ function ColumnSkeleton() {
 
 export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoardProps) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -343,6 +380,7 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
               status={status}
               tasks={kanban[status]}
               agents={agents}
+              onTaskClick={handleTaskClick}
             />
           ))}
         </div>
@@ -352,6 +390,14 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
           )}
         </DragOverlay>
       </DndContext>
+
+      {/* Task Detail Modal */}
+      <TaskDetailModal
+        task={selectedTask}
+        agents={agents}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+      />
     </div>
   );
 }
