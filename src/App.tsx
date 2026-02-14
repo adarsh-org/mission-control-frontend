@@ -124,7 +124,7 @@ function Dashboard() {
   const [agentFeedCollapsed, setAgentFeedCollapsed] = useState(false);
   const { agents, setAgents, loading: agentsLoading } = useAgents();
   const { kanban, loading: tasksLoading, moveTask, setTasks } = useTasks();
-  const { messages, loading: messagesLoading, addMessage } = useMessages();
+  const { messages, loading: messagesLoading, loadingMore, hasMore, loadMore, addMessage } = useMessages();
 
   const handleAgentUpdate = useCallback((agent: Agent, _action?: 'created' | 'updated') => {
     setAgents(prev => {
@@ -196,7 +196,10 @@ function Dashboard() {
         <aside className={`${agentFeedCollapsed ? 'w-14' : 'w-80 lg:w-96'} border-l border-white/5 bg-claw-surface/50 flex-shrink-0 overflow-hidden transition-all duration-300`}>
           <AgentChat 
             messages={messages} 
-            loading={messagesLoading} 
+            loading={messagesLoading}
+            loadingMore={loadingMore}
+            hasMore={hasMore}
+            loadMore={loadMore}
             collapsed={agentFeedCollapsed}
             onToggleCollapse={() => setAgentFeedCollapsed(!agentFeedCollapsed)}
           />
@@ -219,7 +222,13 @@ function Dashboard() {
         </div>
 
         <div className={`h-full overflow-hidden ${mobileView === 'chat' ? 'block' : 'hidden'}`}>
-          <AgentChat messages={messages} loading={messagesLoading} />
+          <AgentChat 
+            messages={messages} 
+            loading={messagesLoading}
+            loadingMore={loadingMore}
+            hasMore={hasMore}
+            loadMore={loadMore}
+          />
         </div>
       </main>
 

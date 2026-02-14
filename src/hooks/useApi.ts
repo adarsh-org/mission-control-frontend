@@ -166,20 +166,26 @@ export function useTasks() {
   return { tasks, setTasks, kanban, loading, error, refetch: fetchTasks, moveTask };
 }
 
+/** Default page size for messages */
+const MESSAGE_PAGE_SIZE = 40;
+
 /**
- * Hook for fetching and managing agent messages.
+ * Hook for fetching and managing agent messages with pagination.
  * Includes polling every 5 seconds for realtime updates.
- * @returns Object with messages array, loading state, and add handler
+ * @returns Object with messages array, loading state, pagination state, and handlers
  */
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalLoaded, setTotalLoaded] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const lastIdRef = useRef<string | null>(null);
 
   const fetchMessages = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/messages`);
+      const res = await fetch(`${API_BASE}/api/messages?limit=${MESSAGE_PAGE_SIZE}`);
       if (!res.ok) throw new Error('Failed to fetch messages');
       const data = await res.json();
       const rawMessages = Array.isArray(data) ? data : data.messages || [];
@@ -191,6 +197,8 @@ export function useMessages() {
       }
       
       setMessages(transformed);
+      setTotalLoaded(transformed.length);
+      setHasMore(transformed.length >= MESSAGE_PAGE_SIZE);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -198,6 +206,42 @@ export function useMessages() {
       setLoading(false);
     }
   }, []);
+
+  /**
+   * Load more (older) messages with offset-based pagination.
+   * Prepends older messages to the beginning of the array.
+   */
+  const loadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+    
+    setLoadingMore(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/messages?limit=${MESSAGE_PAGE_SIZE}&offset=${totalLoaded}`);
+      if (!res.ok) throw new Error('Failed to fetch more messages');
+      const data = await res.json();
+      const rawMessages = Array.isArray(data) ? data : data.messages || [];
+      const transformed = rawMessages.map(transformMessage);
+      
+      if (transformed.length < MESSAGE_PAGE_SIZE) {
+        setHasMore(false);
+      }
+      
+      if (transformed.length > 0) {
+        setMessages(prev => {
+          // Filter out duplicates and prepend older messages
+          const existingIds = new Set(prev.map(m => m.id));
+          const newMessages = transformed.filter(m => !existingIds.has(m.id));
+          return [...newMessages, ...prev];
+        });
+        setTotalLoaded(prev => prev + transformed.length);
+      }
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [loadingMore, hasMore, totalLoaded]);
 
   // Initial fetch
   useEffect(() => {
@@ -224,7 +268,18 @@ export function useMessages() {
     });
   }, []);
 
-  return { messages, setMessages, loading, error, refetch: fetchMessages, addMessage };
+  return { 
+    messages, 
+    setMessages, 
+    loading, 
+    loadingMore,
+    hasMore,
+    totalLoaded,
+    error, 
+    refetch: fetchMessages, 
+    addMessage,
+    loadMore
+  };
 }
 
 /**

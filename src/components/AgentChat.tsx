@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { MessageSquare, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { MessageSquare, ChevronLeft, ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import type { Message } from '../types';
 import { AgentAvatar } from './AgentAvatar';
@@ -7,6 +7,9 @@ import { AgentAvatar } from './AgentAvatar';
 interface AgentChatProps {
   messages: Message[];
   loading?: boolean;
+  loadingMore?: boolean;
+  hasMore?: boolean;
+  loadMore?: () => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -180,18 +183,39 @@ function MessageSkeleton() {
   );
 }
 
-export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: AgentChatProps) {
+export function AgentChat({ messages, loading, loadingMore, hasMore, loadMore, collapsed, onToggleCollapse }: AgentChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const prevScrollHeightRef = useRef<number>(0);
+  const isLoadingMoreRef = useRef(false);
 
-  // Detect scroll position
-  const handleScroll = () => {
+  // Detect scroll position and trigger lazy loading
+  const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
     setShowScrollButton(distanceFromBottom > 100);
-  };
+    
+    // Load more when scrolled near top (< 100px from top)
+    if (scrollTop < 100 && hasMore && loadMore && !loadingMore && !isLoadingMoreRef.current) {
+      isLoadingMoreRef.current = true;
+      prevScrollHeightRef.current = scrollHeight;
+      loadMore();
+    }
+  }, [hasMore, loadMore, loadingMore]);
+
+  // Preserve scroll position after loading more messages
+  useEffect(() => {
+    if (!loadingMore && isLoadingMoreRef.current && containerRef.current) {
+      const newScrollHeight = containerRef.current.scrollHeight;
+      const scrollDiff = newScrollHeight - prevScrollHeightRef.current;
+      if (scrollDiff > 0) {
+        containerRef.current.scrollTop += scrollDiff;
+      }
+      isLoadingMoreRef.current = false;
+    }
+  }, [loadingMore, messages.length]);
 
   // Scroll to bottom
   const scrollToBottom = () => {
@@ -200,7 +224,7 @@ export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: Ag
 
   // Auto-scroll on new messages (only if near bottom)
   useEffect(() => {
-    if (!showScrollButton) {
+    if (!showScrollButton && !isLoadingMoreRef.current) {
       scrollToBottom();
     }
   }, [messages.length]);
@@ -297,6 +321,19 @@ export function AgentChat({ messages, loading, collapsed, onToggleCollapse }: Ag
           </div>
         ) : (
           <div className="py-2">
+            {/* Loading more indicator at top */}
+            {loadingMore && (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="w-5 h-5 text-accent-secondary animate-spin" />
+                <span className="ml-2 text-xs text-accent-muted">Loading older messages...</span>
+              </div>
+            )}
+            {/* Show "no more" indicator when at the beginning */}
+            {!hasMore && messages.length > 0 && (
+              <div className="flex items-center justify-center py-3">
+                <span className="text-[10px] text-accent-muted/60 font-mono">— Beginning of conversation —</span>
+              </div>
+            )}
             {messages.map(message => (
               <ChatBubble key={message.id} message={message} />
             ))}
