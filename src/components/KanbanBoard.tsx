@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -17,7 +17,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Play } from 'lucide-react';
+import { Inbox, ListTodo, Eye, CheckCircle2, GripVertical, Clock, Play, Loader2 } from 'lucide-react';
 import { AgentAvatar } from './AgentAvatar';
 import type { Task, KanbanData, TaskStatus, Agent } from '../types';
 import { TaskDetailModal } from './TaskDetailModal';
@@ -86,6 +86,10 @@ interface KanbanBoardProps {
   agents: Agent[];
   loading?: boolean;
   onMoveTask: (taskId: string, newStatus: TaskStatus) => void;
+  // Completed column pagination props
+  loadMoreCompleted?: () => void;
+  completedLoadingMore?: boolean;
+  completedHasMore?: boolean;
 }
 
 const columnConfig: Record<TaskStatus, { title: string; icon: typeof Inbox; color: string }> = {
@@ -235,16 +239,43 @@ interface KanbanColumnProps {
   tasks: Task[];
   agents: Agent[];
   onTaskClick?: (task: Task) => void;
+  // Pagination props (only used for completed column)
+  onLoadMore?: () => void;
+  loadingMore?: boolean;
+  hasMore?: boolean;
 }
 
-function KanbanColumn({ status, tasks, agents, onTaskClick }: KanbanColumnProps) {
+function KanbanColumn({ status, tasks, agents, onTaskClick, onLoadMore, loadingMore, hasMore }: KanbanColumnProps) {
   const config = columnConfig[status];
   const Icon = config.icon;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { setNodeRef } = useSortable({
     id: status,
     data: { type: 'column' },
   });
+
+  // Infinite scroll detection for completed column
+  const handleScroll = useCallback(() => {
+    if (status !== 'completed' || !onLoadMore || loadingMore || !hasMore) return;
+    
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    // Trigger when scrolled within 100px of the bottom
+    if (scrollHeight - scrollTop - clientHeight < 100) {
+      onLoadMore();
+    }
+  }, [status, onLoadMore, loadingMore, hasMore]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || status !== 'completed') return;
+    
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [handleScroll, status]);
 
   return (
     <div 
@@ -260,11 +291,14 @@ function KanbanColumn({ status, tasks, agents, onTaskClick }: KanbanColumnProps)
             {config.title}
           </h3>
           <span className={`ml-auto text-[11px] font-mono font-medium px-2 py-0.5 rounded-md bg-${config.color}/10 text-${config.color}`}>
-            {tasks.length}
+            {tasks.length}{status === 'completed' && hasMore ? '+' : ''}
           </span>
         </div>
       </div>
-      <div className="flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px]">
+      <div 
+        ref={scrollContainerRef}
+        className="flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px]"
+      >
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map(task => (
             <SortableTask key={task.id} task={task} agents={agents} onTaskClick={onTaskClick} />
@@ -276,6 +310,22 @@ function KanbanColumn({ status, tasks, agents, onTaskClick }: KanbanColumnProps)
               <Icon className="w-8 h-8 mx-auto mb-2 opacity-30" />
               <p>No tasks</p>
             </div>
+          </div>
+        )}
+        {/* Pagination footer for completed column */}
+        {status === 'completed' && tasks.length > 0 && (
+          <div className="pt-2 pb-1">
+            {loadingMore && (
+              <div className="flex items-center justify-center gap-2 py-3 text-accent-muted">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-xs">Loading more...</span>
+              </div>
+            )}
+            {!loadingMore && !hasMore && (
+              <div className="flex items-center justify-center py-3">
+                <span className="text-xs text-accent-muted/60">No more tasks</span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -301,7 +351,15 @@ function ColumnSkeleton() {
   );
 }
 
-export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoardProps) {
+export function KanbanBoard({ 
+  kanban, 
+  agents, 
+  loading, 
+  onMoveTask,
+  loadMoreCompleted,
+  completedLoadingMore,
+  completedHasMore,
+}: KanbanBoardProps) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -384,6 +442,10 @@ export function KanbanBoard({ kanban, agents, loading, onMoveTask }: KanbanBoard
               )}
               agents={agents}
               onTaskClick={handleTaskClick}
+              // Pass pagination props only for completed column
+              onLoadMore={status === 'completed' ? loadMoreCompleted : undefined}
+              loadingMore={status === 'completed' ? completedLoadingMore : undefined}
+              hasMore={status === 'completed' ? completedHasMore : undefined}
             />
           ))}
         </div>

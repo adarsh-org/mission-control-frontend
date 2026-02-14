@@ -123,7 +123,7 @@ function Dashboard() {
   const [mobileView, setMobileView] = useState<MobileView>('board');
   const [agentFeedCollapsed, setAgentFeedCollapsed] = useState(false);
   const { agents, setAgents, loading: agentsLoading } = useAgents();
-  const { kanban, loading: tasksLoading, moveTask, setTasks } = useTasks();
+  const { kanban, loading: tasksLoading, moveTask, setTasks, loadMoreCompleted, completedLoadingMore, completedHasMore } = useTasks();
   const { messages, loading: messagesLoading, loadingMore, hasMore, loadMore, addMessage } = useMessages();
 
   const handleAgentUpdate = useCallback((agent: Agent, _action?: 'created' | 'updated') => {
@@ -190,6 +190,9 @@ function Dashboard() {
             agents={agents}
             loading={tasksLoading}
             onMoveTask={handleMoveTask}
+            loadMoreCompleted={loadMoreCompleted}
+            completedLoadingMore={completedLoadingMore}
+            completedHasMore={completedHasMore}
           />
         </section>
 
@@ -218,6 +221,9 @@ function Dashboard() {
             agents={agents}
             loading={tasksLoading}
             onMoveTask={handleMoveTask}
+            loadMoreCompleted={loadMoreCompleted}
+            completedLoadingMore={completedLoadingMore}
+            completedHasMore={completedHasMore}
           />
         </div>
 

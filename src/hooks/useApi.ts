@@ -105,22 +105,49 @@ export function useAgents() {
   return { agents, setAgents, loading, error, refetch: fetchAgents };
 }
 
+/** Default page size for completed tasks pagination */
+const COMPLETED_PAGE_SIZE = 50;
+
 /**
  * Hook for fetching and managing tasks with Kanban board structure.
- * @returns Object with tasks, kanban data, loading state, and move handler
+ * Includes pagination for the completed column with infinite scroll.
+ * @returns Object with tasks, kanban data, loading state, pagination state, and handlers
  */
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Completed column pagination state
+  const [completedOffset, setCompletedOffset] = useState(0);
+  const [completedHasMore, setCompletedHasMore] = useState(true);
+  const [completedLoadingMore, setCompletedLoadingMore] = useState(false);
 
   const fetchTasks = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/tasks`);
-      if (!res.ok) throw new Error('Failed to fetch tasks');
-      const data = await res.json();
-      const rawTasks = Array.isArray(data) ? data : data.tasks || [];
-      setTasks(rawTasks.map(transformTask));
+      // Fetch non-completed tasks (all of them)
+      const nonCompletedRes = await fetch(`${API_BASE}/api/tasks`);
+      if (!nonCompletedRes.ok) throw new Error('Failed to fetch tasks');
+      const nonCompletedData = await nonCompletedRes.json();
+      const allTasks = Array.isArray(nonCompletedData) ? nonCompletedData : nonCompletedData.tasks || [];
+      
+      // Separate completed and non-completed
+      const nonCompleted = allTasks.filter((t: Record<string, unknown>) => t.status !== 'completed');
+      
+      // Fetch first page of completed tasks with pagination
+      const completedRes = await fetch(`${API_BASE}/api/tasks?status=completed&limit=${COMPLETED_PAGE_SIZE}&offset=0`);
+      if (!completedRes.ok) throw new Error('Failed to fetch completed tasks');
+      const completedData = await completedRes.json();
+      const completedTasks = Array.isArray(completedData) ? completedData : completedData.tasks || [];
+      
+      // Combine non-completed with paginated completed
+      const combined = [...nonCompleted, ...completedTasks];
+      setTasks(combined.map(transformTask));
+      
+      // Update pagination state
+      setCompletedOffset(completedTasks.length);
+      setCompletedHasMore(completedTasks.length >= COMPLETED_PAGE_SIZE);
+      
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -132,6 +159,42 @@ export function useTasks() {
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
+
+  /**
+   * Load more completed tasks for infinite scroll.
+   * Appends older completed tasks to the existing list.
+   */
+  const loadMoreCompleted = useCallback(async () => {
+    if (completedLoadingMore || !completedHasMore) return;
+    
+    setCompletedLoadingMore(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/tasks?status=completed&limit=${COMPLETED_PAGE_SIZE}&offset=${completedOffset}`);
+      if (!res.ok) throw new Error('Failed to fetch more completed tasks');
+      const data = await res.json();
+      const newCompleted = Array.isArray(data) ? data : data.tasks || [];
+      
+      if (newCompleted.length < COMPLETED_PAGE_SIZE) {
+        setCompletedHasMore(false);
+      }
+      
+      if (newCompleted.length > 0) {
+        const transformed = newCompleted.map(transformTask);
+        setTasks(prev => {
+          // Filter out duplicates and append new completed tasks
+          const existingIds = new Set(prev.map(t => t.id));
+          const uniqueNew = transformed.filter((t: Task) => !existingIds.has(t.id));
+          return [...prev, ...uniqueNew];
+        });
+        setCompletedOffset(prev => prev + newCompleted.length);
+      }
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setCompletedLoadingMore(false);
+    }
+  }, [completedLoadingMore, completedHasMore, completedOffset]);
 
   /** Kanban board data structure with tasks grouped by status */
   const kanban: KanbanData = {
@@ -163,7 +226,19 @@ export function useTasks() {
     }
   }, [fetchTasks]);
 
-  return { tasks, setTasks, kanban, loading, error, refetch: fetchTasks, moveTask };
+  return { 
+    tasks, 
+    setTasks, 
+    kanban, 
+    loading, 
+    error, 
+    refetch: fetchTasks, 
+    moveTask,
+    // Completed pagination exports
+    loadMoreCompleted,
+    completedLoadingMore,
+    completedHasMore,
+  };
 }
 
 /** Default page size for messages */
