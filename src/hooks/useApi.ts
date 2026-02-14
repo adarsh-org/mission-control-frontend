@@ -196,7 +196,8 @@ export function useMessages() {
         lastIdRef.current = transformed[transformed.length - 1].id;
       }
       
-      setMessages(transformed);
+      // Reverse to chronological order (oldest first, newest last) for Slack-style display
+      setMessages(transformed.reverse());
       setTotalLoaded(transformed.length);
       setHasMore(transformed.length >= MESSAGE_PAGE_SIZE);
       setError(null);
@@ -227,10 +228,12 @@ export function useMessages() {
       }
       
       if (transformed.length > 0) {
+        // Reverse to chronological order (oldest first)
+        const chronological: Message[] = transformed.reverse();
         setMessages(prev => {
-          // Filter out duplicates and prepend older messages
+          // Filter duplicates and prepend older messages
           const existingIds = new Set(prev.map(m => m.id));
-          const newMessages = transformed.filter(m => !existingIds.has(m.id));
+          const newMessages = chronological.filter((m: Message) => !existingIds.has(m.id));
           return [...newMessages, ...prev];
         });
         setTotalLoaded(prev => prev + transformed.length);
