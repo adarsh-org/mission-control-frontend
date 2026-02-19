@@ -164,18 +164,20 @@ export function AgentsList({ agents, loading }: AgentsListProps) {
             <p className="text-xs text-accent-muted/60 mt-1">Agents will appear here when online</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3">
-            {agents.map(agent => (
-              <AgentCard key={agent.id} agent={agent} onClick={() => setSelectedAgent(agent)} />
-            ))}
-          </div>
-          {selectedAgent && (
-            <AgentProfileModal
-              agentId={selectedAgent.id}
-              agentBasic={selectedAgent}
-              onClose={() => setSelectedAgent(null)}
-            />
-          )}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3">
+              {agents.map(agent => (
+                <AgentCard key={agent.id} agent={agent} onClick={() => setSelectedAgent(agent)} />
+              ))}
+            </div>
+            {selectedAgent && (
+              <AgentProfileModal
+                agentId={selectedAgent.id}
+                agentBasic={selectedAgent}
+                onClose={() => setSelectedAgent(null)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
