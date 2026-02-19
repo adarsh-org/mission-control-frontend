@@ -246,7 +246,7 @@ const MESSAGE_PAGE_SIZE = 40;
 
 /**
  * Hook for fetching and managing agent messages with pagination.
- * Includes polling every 5 seconds for realtime updates.
+ * Uses SSE (Server-Sent Events) for real-time updates.
  * @returns Object with messages array, loading state, pagination state, and handlers
  */
 export function useMessages() {
@@ -326,15 +326,6 @@ export function useMessages() {
     fetchMessages();
   }, [fetchMessages]);
 
-  // Polling every 5 seconds for realtime updates
-  useEffect(() => {
-    const pollInterval = setInterval(() => {
-      fetchMessages();
-    }, 5000);
-
-    return () => clearInterval(pollInterval);
-  }, [fetchMessages]);
-
   /** Adds a new message, keeping only the last 200 messages */
   const addMessage = useCallback((msg: Message) => {
     setMessages(prev => {
@@ -345,6 +336,24 @@ export function useMessages() {
       return [...prev.slice(-199), msg];
     });
   }, []);
+
+  // Real-time updates via SSE
+  useEffect(() => {
+    const eventSource = new EventSource(`${API_BASE}/api/stream`);
+
+    eventSource.addEventListener('message-created', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        addMessage(transformMessage(data));
+      } catch { /* ignore parse errors */ }
+    });
+
+    eventSource.onerror = () => {
+      // EventSource auto-reconnects on error
+    };
+
+    return () => eventSource.close();
+  }, [addMessage]);
 
   return { 
     messages, 
