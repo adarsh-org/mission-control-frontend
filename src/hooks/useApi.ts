@@ -54,7 +54,24 @@ export function transformAgent(apiAgent: Record<string, unknown>): Agent {
     description: String(apiAgent.description || ''),
     status: (apiAgent.status as Agent['status']) || 'idle',
     avatar: apiAgent.avatar ? String(apiAgent.avatar) : undefined,
+    role: apiAgent.role ? String(apiAgent.role) : undefined,
+    bio: apiAgent.bio ? String(apiAgent.bio) : undefined,
+    does: Array.isArray(apiAgent.does) ? apiAgent.does as string[] : undefined,
+    does_not: Array.isArray(apiAgent.does_not) ? apiAgent.does_not as string[] : undefined,
+    principles: Array.isArray(apiAgent.principles) ? apiAgent.principles as string[] : undefined,
+    critical_actions: Array.isArray(apiAgent.critical_actions) ? apiAgent.critical_actions as string[] : undefined,
+    communication_style: apiAgent.communication_style ? String(apiAgent.communication_style) : undefined,
+    bmad_source: apiAgent.bmad_source ? String(apiAgent.bmad_source) : undefined,
   };
+}
+
+/** Fetch a single agent by ID with all profile fields */
+export async function fetchAgentById(id: string): Promise<Agent> {
+  const API = window.__CLAW_CONFIG__?.API_URL || import.meta.env.VITE_API_URL || '';
+  const res = await fetch(`${API}/api/agents/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch agent');
+  const data = await res.json();
+  return transformAgent(data);
 }
 
 /**

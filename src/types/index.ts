@@ -18,6 +18,14 @@ export interface Agent {
   description?: string;
   status: AgentStatus;
   avatar?: string;
+  role?: string;
+  bio?: string;
+  does?: string[];
+  does_not?: string[];
+  principles?: string[];
+  critical_actions?: string[];
+  communication_style?: string;
+  bmad_source?: string;
 }
 
 export interface Message {
